@@ -42,9 +42,9 @@ func (res Resource) GetActivities(types ...string) ([]QorActivity, error) {
 	var inTypes, notInTypes []string
 	for _, t := range types {
 		if strings.HasPrefix(t, "-") {
-			inTypes = append(inTypes, t)
-		} else {
 			notInTypes = append(notInTypes, strings.TrimPrefix(t, "-"))
+		} else {
+			inTypes = append(inTypes, t)
 		}
 	}
 
