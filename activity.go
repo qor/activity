@@ -11,7 +11,7 @@ import (
 	"github.com/qor/qor/audited"
 )
 
-type Activity struct {
+type QorActivity struct {
 	gorm.Model
 	Comment      string
 	Type         string

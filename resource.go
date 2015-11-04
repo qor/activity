@@ -28,15 +28,15 @@ func (res Resource) getPrimaryKey() string {
 	return strings.Join(primaryValues, "::")
 }
 
-func (res Resource) CreateActivity(activity Activity) error {
+func (res Resource) CreateActivity(activity QorActivity) error {
 	db := res.Context.GetDB()
 	activity.ResourceType = res.ToParam()
 	activity.ResourceID = res.getPrimaryKey()
 	return db.Save(&activity).Error
 }
 
-func (res Resource) GetActivities(types ...string) ([]Activity, error) {
-	var activities []Activity
+func (res Resource) GetActivities(types ...string) ([]QorActivity, error) {
+	var activities []QorActivity
 	db := res.Context.GetDB().Where("resource_id = ? AND resource_type = ?", res.getPrimaryKey(), res.ToParam())
 
 	var inTypes, notInTypes []string
