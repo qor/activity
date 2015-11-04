@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/jinzhu/gorm"
+	"github.com/qor/qor"
 	"github.com/qor/qor/admin"
 	"github.com/qor/qor/audited"
 )
@@ -29,5 +30,8 @@ func RegisterActivityMeta(res *admin.Resource) {
 	res.Meta(&admin.Meta{
 		Name: "Activities",
 		Type: "activities",
+		Valuer: func(record interface{}, context *qor.Context) interface{} {
+			return New(res, record, context)
+		},
 	})
 }

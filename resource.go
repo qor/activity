@@ -10,33 +10,34 @@ import (
 
 type Resource struct {
 	*admin.Resource
+	Record  interface{}
 	Context *qor.Context
 }
 
-func New(res *admin.Resource, context *qor.Context) *Resource {
-	return &Resource{Resource: res, Context: context}
+func New(res *admin.Resource, record interface{}, context *qor.Context) *Resource {
+	return &Resource{Resource: res, Record: record, Context: context}
 }
 
-func (res *Resource) getPrimaryKey(record interface{}) string {
+func (res Resource) getPrimaryKey() string {
 	db := res.Context.GetDB()
 
 	var primaryValues []string
-	for _, field := range db.NewScope(record).PrimaryFields() {
+	for _, field := range db.NewScope(res.Record).PrimaryFields() {
 		primaryValues = append(primaryValues, fmt.Sprint(field.Field.Interface()))
 	}
 	return strings.Join(primaryValues, "::")
 }
 
-func (res *Resource) CreateActivity(record interface{}, activity Activity) error {
+func (res Resource) CreateActivity(activity Activity) error {
 	db := res.Context.GetDB()
 	activity.ResourceType = res.ToParam()
-	activity.ResourceID = res.getPrimaryKey(record)
+	activity.ResourceID = res.getPrimaryKey()
 	return db.Save(&activity).Error
 }
 
-func (res *Resource) GetActivities(record interface{}, types ...string) ([]Activity, error) {
+func (res Resource) GetActivities(types ...string) ([]Activity, error) {
 	var activities []Activity
-	db := res.Context.GetDB().Where("resource_id = ? AND resource_type = ?", res.getPrimaryKey(record), res.ToParam())
+	db := res.Context.GetDB().Where("resource_id = ? AND resource_type = ?", res.getPrimaryKey(), res.ToParam())
 
 	var inTypes, notInTypes []string
 	for _, t := range types {

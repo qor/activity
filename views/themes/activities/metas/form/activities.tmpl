@@ -1,3 +1,14 @@
-<div class="activities">
-  Activities
+<div class="qor-field">
+  <label class="qor-field__label" for="{{.InputId}}">{{dt (printf "%v.attributes.%v" .Base.ToParam .Label) .Label}}</label>
+
+  <div class="qor-activities-tags">
+    <label class="qor-field__label" for="{{.InputId}}">{{dt (printf "%v.attributes.%v.Tags" .Base.ToParam .Label) "Tags"}}</label>
+    {{.Value.GetActivities "tags"}}
+    <input>
+  </div>
+
+  <div class="qor-activities-history">
+    <label class="qor-field__label" for="{{.InputId}}">{{dt (printf "%v.attributes.%v.History" .Base.ToParam .Label) "History"}}</label>
+    {{.Value.GetActivities "-tags"}}
+  </div>
 </div>
