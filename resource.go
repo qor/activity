@@ -37,9 +37,24 @@ func (res *Resource) CreateActivity(record interface{}, activity Activity) error
 func (res *Resource) GetActivities(record interface{}, types ...string) ([]Activity, error) {
 	var activities []Activity
 	db := res.Context.GetDB().Where("resource_id = ? AND resource_type = ?", res.getPrimaryKey(record), res.ToParam())
-	if len(types) > 0 {
-		db = db.Where("type IN (?)", types)
+
+	var inTypes, notInTypes []string
+	for _, t := range types {
+		if strings.HasPrefix(t, "-") {
+			inTypes = append(inTypes, t)
+		} else {
+			notInTypes = append(notInTypes, strings.TrimPrefix(t, "-"))
+		}
 	}
+
+	if len(inTypes) > 0 {
+		db = db.Where("type IN (?)", inTypes)
+	}
+
+	if len(notInTypes) > 0 {
+		db = db.Where("type NOT IN (?)", notInTypes)
+	}
+
 	err := db.Find(&activities).Error
 	return activities, err
 }
