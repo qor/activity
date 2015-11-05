@@ -1,14 +1,23 @@
 <div class="qor-field">
-  <label class="qor-field__label" for="{{.InputId}}">{{dt (printf "%v.attributes.%v" .Base.ToParam .Label) .Label}}</label>
+  <label class="qor-field__label">{{dt (printf "%v.attributes.%v" .Base.ToParam .Label) .Label}}</label>
 
   <div class="qor-activities-tags">
-    <label class="qor-field__label" for="{{.InputId}}">{{dt (printf "%v.attributes.%v.Tags" .Base.ToParam .Label) "Tags"}}</label>
-    {{.Value.GetActivities "tags"}}
-    <input>
+    <label class="qor-field__label">{{dt (printf "%v.attributes.%v.Tags" .Base.ToParam .Label) "Tags"}}</label>
+    {{.Value.GetActivities "tag"}}
+    <form action="{{edit_resource_path .Value.Record .Value.Resource}}/!activity">
+      <input type="hidden" name="type" value="tag">
+      <input type="string" name="comment" value="">
+      <input type="submit">
+    </form>
   </div>
 
   <div class="qor-activities-history">
-    <label class="qor-field__label" for="{{.InputId}}">{{dt (printf "%v.attributes.%v.History" .Base.ToParam .Label) "History"}}</label>
-    {{.Value.GetActivities "-tags"}}
+    <label class="qor-field__label">{{dt (printf "%v.attributes.%v.History" .Base.ToParam .Label) "History"}}</label>
+    <form action="{{edit_resource_path .Value.Record .Value.Resource}}/!activity">
+      <input type="hidden" name="type" value="comment">
+      <input type="string" name="comment" value="">
+      <input type="submit">
+    </form>
+    {{.Value.GetActivities "-tag"}}
   </div>
 </div>

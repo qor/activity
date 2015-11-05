@@ -27,11 +27,15 @@ func RegisterActivityMeta(res *admin.Resource) {
 
 	res.UseTheme("activities")
 
-	res.Meta(&admin.Meta{
-		Name: "Activities",
-		Type: "activities",
-		Valuer: func(record interface{}, context *qor.Context) interface{} {
-			return New(res, record, context)
-		},
-	})
+	res.IndexAttrs(append(res.IndexAttrs(), "-Activities")...)
+
+	if res.GetMeta("Activities") == nil {
+		res.Meta(&admin.Meta{
+			Name: "Activities",
+			Type: "activities",
+			Valuer: func(record interface{}, context *qor.Context) interface{} {
+				return New(res, record, context)
+			},
+		})
+	}
 }
