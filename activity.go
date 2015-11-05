@@ -1,6 +1,7 @@
 package activity
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"strings"
@@ -38,4 +39,7 @@ func RegisterActivityMeta(res *admin.Resource) {
 			},
 		})
 	}
+
+	router := res.GetAdmin().GetRouter()
+	router.Post(fmt.Sprintf("/%v/(.*?)/!activity", res.ToParam()), CreateActivity)
 }
