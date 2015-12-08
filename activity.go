@@ -28,7 +28,7 @@ func RegisterActivityMeta(res *admin.Resource) {
 
 	res.UseTheme("activities")
 
-	res.IndexAttrs(append(res.IndexAttrs(), "-Activities")...)
+	res.IndexAttrs(res.IndexAttrs(), "-Activities")
 
 	if res.GetMeta("Activities") == nil {
 		res.Meta(&admin.Meta{
