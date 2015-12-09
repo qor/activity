@@ -1,8 +1,8 @@
 <div class="qor-field">
-  <label class="qor-field__label">{{dt (printf "%v.attributes.%v" .Base.ToParam .Label) .Label}}</label>
+  <label class="qor-field__label">{{dt (printf "%v.attributes.%v" .BaseResource.ToParam .Label) .Label}}</label>
 
   <div class="qor-activities-tags">
-    <label class="qor-field__label">{{dt (printf "%v.attributes.%v.Tags" .Base.ToParam .Label) "Tags"}}</label>
+    <label class="qor-field__label">{{dt (printf "%v.attributes.%v.Tags" .BaseResource.ToParam .Label) "Tags"}}</label>
     {{.Value.GetActivities "tag"}}
     <form action="{{edit_resource_path .Value.Record .Value.Resource}}/!activity" method="POST">
       <input type="hidden" name="type" value="tag">
@@ -12,7 +12,7 @@
   </div>
 
   <div class="qor-activities-history">
-    <label class="qor-field__label">{{dt (printf "%v.attributes.%v.History" .Base.ToParam .Label) "History"}}</label>
+    <label class="qor-field__label">{{dt (printf "%v.attributes.%v.History" .BaseResource.ToParam .Label) "History"}}</label>
     <form action="{{edit_resource_path .Value.Record .Value.Resource}}/!activity" method="POST">
       <input type="hidden" name="type" value="comment">
       <input type="string" name="comment" value="">
