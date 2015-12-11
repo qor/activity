@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/jinzhu/gorm"
-	"github.com/qor/qor"
 	"github.com/qor/qor/admin"
 	"github.com/qor/qor/audited"
 )
@@ -28,18 +27,16 @@ func RegisterActivityMeta(res *admin.Resource) {
 
 	res.UseTheme("activities")
 
-	res.IndexAttrs(res.IndexAttrs(), "-Activities")
+	res.GetAdmin().RegisterFuncMap("get_activities", func(context *admin.Context, types ...string) []QorActivity {
+		activities, _ := GetActivities(context, types...)
+		return activities
+	})
 
-	if res.GetMeta("Activities") == nil {
-		res.Meta(&admin.Meta{
-			Name: "Activities",
-			Type: "activities",
-			Valuer: func(record interface{}, context *qor.Context) interface{} {
-				return New(res, record, context)
-			},
-		})
-	}
+	res.GetAdmin().RegisterFuncMap("record", func(context *admin.Context) interface{} {
+		result, _ := context.FindOne()
+		return result
+	})
 
 	router := res.GetAdmin().GetRouter()
-	router.Post(fmt.Sprintf("/%v/(.*?)/!activity", res.ToParam()), CreateActivity)
+	router.Post(fmt.Sprintf("/%v/(.*?)/!activity", res.ToParam()), CreateActivityHandler)
 }
