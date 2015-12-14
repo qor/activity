@@ -1,6 +1,11 @@
 QorActivity = {
   init : function() {
     if($("#qor-activity").get(0)) {
+      if($("#qor-activity").parents(".qor-slideout").get(0)) {
+        this.$scoped = $("#qor-activity").parents(".qor-slideout");
+      } else {
+        this.$scoped = $("body");
+      }
       this.initStatus();
       this.bindingEvents();
     }
@@ -8,16 +13,17 @@ QorActivity = {
 
   initStatus : function() {
     this.appendTabsToFormContainer();
-    this.switchTab();
+    this.initTab();
+    this.clearHeader();
   },
 
   bindingEvents : function() {
-    $(".qor-page__body").on("click", ".mdl-tabs__tab", this.urlAddHash);
+    this.$scoped.on("click", ".qor-page__body .mdl-tabs__tab", this.switchTab);
   },
 
   appendTabsToFormContainer : function() {
-    var $formContainer = $(".qor-form-container");
-    var $scoped = $(".qor-page__body");
+    var $formContainer = this.$scoped.find(".qor-form-container");
+    var $scoped = this.$scoped.find(".qor-page__body");
     var $tabsWrap;
     if(!$formContainer.parent(".mdl-tabs").get(0)) {
       $scoped.append($(".qor-tabs-template").html());
@@ -29,23 +35,34 @@ QorActivity = {
     }
     $tabsWrap.find(".mdl-tabs__tab-bar").append($(".qor-tabs-tab-template").html());
     $tabsWrap.append($(".qor-tabs-panel-template").html());
+    $(".qor-tabs-template").remove();
+    $(".qor-tabs-tab-template").remove();
+    $(".qor-tabs-panel-template").remove();
   },
 
-  switchTab : function() {
-    if(location.href.match(/#activity-panel/)) {
-      $(".qor-page__body .mdl-tabs__tab").removeClass("is-active");
-      $(".qor-page__body .mdl-tabs__panel").removeClass("is-active");
-      $(".qor-page__body .mdl-tabs__tab[href='#activity-panel']").addClass("is-active");
-      $(".qor-page__body #activity-panel").addClass("is-active");
+  initTab : function() {
+    if(location.href.match(/#activity/)) {
+      $.proxy(this.switchTab, this.$scoped.find(".mdl-tabs__tab[href='#activity-panel']"))();
     }
   },
 
-  urlAddHash : function() {
-    var hash = $(".qor-page__body .mdl-tabs__tab.is-active").attr("href");
-    location.hash = hash;
+  clearHeader : function() {
+    var $header = this.$scoped.find(".qor-page__header");
+    $header.find("script").remove("");
+    if($header.text().replace(/\n/g, "").trim() == "") {
+      $header.remove();
+    }
+  },
+
+  switchTab : function() {
+    var $scoped = QorActivity.$scoped;
+    $scoped.find(".mdl-tabs__tab").removeClass("is-active");
+    $scoped.find(".mdl-tabs__panel").removeClass("is-active");
+    $(this).addClass("is-active");
+    $scoped.find($(this).attr("href")).addClass("is-active");
+    var href = $(".mdl-tabs__tab.is-active").attr("href");
+    console.info(href == "#activity-panel" ? href.replace("-panel", "") : href);
+    location.hash = href == "#activity-panel" ? href.replace("-panel", "") : href;
+    return false;
   }
 }
-
-$(document).ready(function() {
-  QorActivity.init();
-});
