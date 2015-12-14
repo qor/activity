@@ -11,8 +11,7 @@ func getPrimaryKey(context *admin.Context) string {
 	db := context.GetDB()
 
 	var primaryValues []string
-	result, _ := context.FindOne()
-	for _, field := range db.NewScope(result).PrimaryFields() {
+	for _, field := range db.NewScope(context.Result).PrimaryFields() {
 		primaryValues = append(primaryValues, fmt.Sprint(field.Field.Interface()))
 	}
 	return strings.Join(primaryValues, "::")

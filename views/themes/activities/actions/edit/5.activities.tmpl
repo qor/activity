@@ -11,38 +11,35 @@
   </div>
 
   <div class="qor-tabs-panel-template" style="display:none;">
-    <div class="mdl-tabs__panel" id="activity-panel">
-      {{$record := record .}}
-      <div class="qor-field">
-        <div class="qor-activities-tags">
-          <label class="qor-field__label">{{dt (printf "%v.attributes.activity.Tags" .Resource.ToParam) "Tags"}}</label>
-          <ul>
-            {{range $activity := get_activities . "tag"}}
-              <li>{{$activity.Comment}}</li>
-            {{end}}
-          </ul>
+    <div class="mdl-tabs__panel qor-activity-container" id="activity-panel">
+      <div class="qor-activities-tags">
+        <label class="qor-field__label">{{dt (printf "%v.attributes.activity.Tags" .Resource.ToParam) "Tags"}}</label>
+        <ul>
+          {{range $activity := get_activities . "tag"}}
+            <li>{{$activity.Comment}}</li>
+          {{end}}
+        </ul>
 
-          <form action="{{edit_resource_path $record .Resource}}/!activity" method="POST">
-            <input type="hidden" name="type" value="tag">
-            <input type="string" name="comment" value="">
-            <button>Submit</button>
-          </form>
-        </div>
+        <form action="{{edit_resource_path .Result .Resource}}/!activity" method="POST">
+          <input type="hidden" name="type" value="tag">
+          <input type="string" name="comment" value="">
+          <button>Submit</button>
+        </form>
+      </div>
 
-        <div class="qor-activities-history">
-          <label class="qor-field__label">{{dt (printf "%v.attributes.activity.History" .Resource.ToParam) "History"}}</label>
-          <ul>
-            {{range $activity := get_activities . "-tag"}}
-              <li>{{$activity.Comment}}</li>
-            {{end}}
-          </ul>
+      <div class="qor-activities-history">
+        <label class="qor-field__label">{{dt (printf "%v.attributes.activity.History" .Resource.ToParam) "History"}}</label>
+        <ul>
+          {{range $activity := get_activities . "-tag"}}
+            <li>{{$activity.Comment}}</li>
+          {{end}}
+        </ul>
 
-          <form action="{{edit_resource_path $record .Resource}}/!activity" method="POST">
-            <input type="hidden" name="type" value="comment">
-            <input type="string" name="comment" value="">
-            <button>Submit</button>
-          </form>
-        </div>
+        <form action="{{edit_resource_path .Result .Resource}}/!activity" method="POST">
+          <input type="hidden" name="type" value="comment">
+          <input type="string" name="comment" value="">
+          <button>Submit</button>
+        </form>
       </div>
     </div>
   </div>

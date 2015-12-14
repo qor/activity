@@ -32,11 +32,6 @@ func RegisterActivityMeta(res *admin.Resource) {
 		return activities
 	})
 
-	res.GetAdmin().RegisterFuncMap("record", func(context *admin.Context) interface{} {
-		result, _ := context.FindOne()
-		return result
-	})
-
 	router := res.GetAdmin().GetRouter()
 	router.Post(fmt.Sprintf("/%v/(.*?)/!activity", res.ToParam()), CreateActivityHandler)
 }
