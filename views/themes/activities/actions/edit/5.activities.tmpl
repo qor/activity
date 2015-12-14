@@ -22,6 +22,7 @@
 
         <form action="{{edit_resource_path .Result .Resource}}/!activity" method="POST">
           <input type="hidden" name="type" value="tag">
+          <input type="hidden" name="redirect_to" value="{{edit_resource_path .Result .Resource}}#activity-panel">
           <input type="string" name="comment" value="">
           <button>Submit</button>
         </form>
@@ -37,6 +38,7 @@
 
         <form action="{{edit_resource_path .Result .Resource}}/!activity" method="POST">
           <input type="hidden" name="type" value="comment">
+          <input type="hidden" name="redirect_to" value="{{edit_resource_path .Result .Resource}}#activity-panel">
           <input type="string" name="comment" value="">
           <button>Submit</button>
         </form>

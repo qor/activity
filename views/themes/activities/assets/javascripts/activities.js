@@ -8,9 +8,11 @@ QorActivity = {
 
   initStatus : function() {
     this.appendTabsToFormContainer();
+    this.switchTab();
   },
 
   bindingEvents : function() {
+    $(".qor-page__body").on("click", ".mdl-tabs__tab", this.urlAddHash);
   },
 
   appendTabsToFormContainer : function() {
@@ -27,6 +29,20 @@ QorActivity = {
     }
     $tabsWrap.find(".mdl-tabs__tab-bar").append($(".qor-tabs-tab-template").html());
     $tabsWrap.append($(".qor-tabs-panel-template").html());
+  },
+
+  switchTab : function() {
+    if(location.href.match(/#activity-panel/)) {
+      $(".qor-page__body .mdl-tabs__tab").removeClass("is-active");
+      $(".qor-page__body .mdl-tabs__panel").removeClass("is-active");
+      $(".qor-page__body .mdl-tabs__tab[href='#activity-panel']").addClass("is-active");
+      $(".qor-page__body #activity-panel").addClass("is-active");
+    }
+  },
+
+  urlAddHash : function() {
+    var hash = $(".qor-page__body .mdl-tabs__tab.is-active").attr("href");
+    location.hash = hash;
   }
 }
 
