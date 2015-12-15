@@ -9,7 +9,9 @@ import (
 func CreateActivityHandler(context *admin.Context) {
 	var activity = QorActivity{
 		Type:    context.Request.Form.Get("type"),
-		Comment: context.Request.Form.Get("comment"),
+		Subject: context.Request.Form.Get("subject"),
+		Context: context.Request.Form.Get("context"),
+		Note:    context.Request.Form.Get("note"),
 	}
 	result, err := context.FindOne()
 	if err == nil {

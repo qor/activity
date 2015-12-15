@@ -18,34 +18,37 @@
 
   <div class="qor-tabs-panel-template" style="display:none;">
     <div class="mdl-tabs__panel qor-activity-container" id="activity-panel">
-      <div class="qor-activities-tags">
-        <label class="qor-field__label">{{dt (printf "%v.attributes.activity.Tags" .Resource.ToParam) "Tags"}}</label>
-        <ul>
-          {{range $activity := get_activities . "tag"}}
-            <li>{{$activity.Comment}}</li>
-          {{end}}
-        </ul>
-
-        <form action="{{edit_resource_path .Result .Resource}}/!activity" method="POST">
-          <input type="hidden" name="type" value="tag">
-          <input type="hidden" name="redirect_to" value="{{edit_resource_path .Result .Resource}}#activity">
-          <input type="string" name="comment" value="">
-          <button>Submit</button>
-        </form>
-      </div>
-
       <div class="qor-activities-history">
-        <label class="qor-field__label">{{dt (printf "%v.attributes.activity.History" .Resource.ToParam) "History"}}</label>
+        <label class="qor-field__label">{{dt (printf "%v.attributes.activity.History" .Resource.ToParam) "Activities"}}</label>
         <ul>
           {{range $activity := get_activities . "-tag"}}
-            <li>{{$activity.Comment}}</li>
+            <li>
+              <div>{{$activity.UpdatedBy}}{{$activity.Subject}}</div>
+              <div>{{$activity.UpdatedAt}}</div>
+              <div>{{$activity.Context}}</div>
+              <div>Note: {{$activity.Note}}</div>
+            </li>
           {{end}}
         </ul>
 
         <form action="{{edit_resource_path .Result .Resource}}/!activity" method="POST">
-          <input type="hidden" name="type" value="comment">
+          <input type="hidden" name="type" value="activity">
           <input type="hidden" name="redirect_to" value="{{edit_resource_path .Result .Resource}}#activity">
-          <input type="string" name="comment" value="">
+          <div>
+            <label>Subject</label>
+            <br/>
+            <input name="subject">
+          </div>
+          <div>
+            <label>Content</label>
+            <br/>
+            <textarea name="content"></textarea>
+          </div>
+          <div>
+            <label>Note</label>
+            <br/>
+            <input type="text" name="note" value="">
+          </div>
           <button>Submit</button>
         </form>
       </div>

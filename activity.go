@@ -13,7 +13,9 @@ import (
 
 type QorActivity struct {
 	gorm.Model
-	Comment      string
+	Subject      string
+	Context      string
+	Note         string
 	Type         string
 	ResourceType string
 	ResourceID   string
