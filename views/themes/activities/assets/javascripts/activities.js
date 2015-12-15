@@ -14,7 +14,6 @@ QorActivity = {
   initStatus : function() {
     this.appendTabsToFormContainer();
     this.initTab();
-    this.clearHeader();
   },
 
   bindingEvents : function() {
@@ -43,14 +42,6 @@ QorActivity = {
   initTab : function() {
     if(location.href.match(/#activity/)) {
       $.proxy(this.switchTab, this.$scoped.find(".mdl-tabs__tab[href='#activity-panel']"))();
-    }
-  },
-
-  clearHeader : function() {
-    var $header = this.$scoped.find(".qor-page__header");
-    $header.find("script").remove("");
-    if($header.text().replace(/\n/g, "").trim() == "") {
-      $header.remove();
     }
   },
 
