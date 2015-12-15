@@ -11,8 +11,11 @@ func CreateActivityHandler(context *admin.Context) {
 		Type:    context.Request.Form.Get("type"),
 		Comment: context.Request.Form.Get("comment"),
 	}
-	result, _ := context.FindOne()
-	err := CreateActivity(activity, context)
+	result, err := context.FindOne()
+	if err == nil {
+		context.Result = result
+		err = CreateActivity(activity, context)
+	}
 	context.AddError(err)
 
 	if context.HasError() {
