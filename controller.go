@@ -10,9 +10,12 @@ func CreateActivityHandler(context *admin.Context) {
 	var activity = QorActivity{
 		Type:    context.Request.Form.Get("type"),
 		Subject: context.Request.Form.Get("subject"),
-		Context: context.Request.Form.Get("context"),
+		Content: context.Request.Form.Get("content"),
 		Note:    context.Request.Form.Get("note"),
 	}
+	userName := context.CurrentUser.DisplayName()
+	activity.SetCreatedBy(userName)
+	activity.SetUpdatedBy(userName)
 	result, err := context.FindOne()
 	if err == nil {
 		context.Result = result

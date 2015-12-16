@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/qor/qor/admin"
@@ -14,7 +15,7 @@ import (
 type QorActivity struct {
 	gorm.Model
 	Subject      string
-	Context      string
+	Content      string
 	Note         string
 	Type         string
 	ResourceType string
@@ -32,6 +33,10 @@ func RegisterActivityMeta(res *admin.Resource) {
 	res.GetAdmin().RegisterFuncMap("get_activities", func(context *admin.Context, types ...string) []QorActivity {
 		activities, _ := GetActivities(context, types...)
 		return activities
+	})
+
+	res.GetAdmin().RegisterFuncMap("formatted_datetime", func(datetime time.Time) string {
+		return datetime.Format("Jan 2 15:04")
 	})
 
 	router := res.GetAdmin().GetRouter()
