@@ -19,38 +19,29 @@
   <div class="qor-tabs-panel-template" style="display:none;">
     <div class="mdl-tabs__panel qor-activity-container" id="activity-panel">
       <div class="qor-activities-history">
-        <label class="qor-field__label" style="font-size: 16px; font-weight: bold;">{{dt "qor.activity.Activities" "Activities"}}</label>
+        <label class="qor-field__label" style="font-size: 16px; font-weight: bold;">{{dt "activity.Activities" "Activities"}}</label>
         {{range $activity := get_activities . "-tag"}}
           <div style="background-color: rgb(242, 242, 242);padding: 10px 20px; margin: 10px 0px;border-radius: 5px;width: 80%">
             <div style="font-size: 16px;">
-              <b>{{$activity.UpdatedBy}}</b> {{$activity.Action}}
+              <b>{{$activity.UpdatedBy}}</b> {{dt (printf "activity.%v" $activity.Action) $activity.Action }}
             </div>
             <div style="color: rgb(185, 185, 185); font-size: 14px;margin-bottom: 8px;">
               {{formatted_datetime $activity.UpdatedAt}}
             </div>
-            <div style="margin-bottom: 10px;">{{$activity.Content}}</div>
+            <div style="margin-bottom: 10px;">{{formatted_content $activity.Content}}</div>
             <div><b>Note:</b> {{$activity.Note}}</div>
           </div>
         {{end}}
       </div>
 
       <div class="qor-activities-new" style="margin-top: 30px;">
-        <label class="qor-field__label" style="font-size: 16px; font-weight: bold;">{{dt "qor.activity.NewActivity" "Post a new activity"}}</label>
+        <label class="qor-field__label" style="font-size: 16px; font-weight: bold;">{{dt "activity.NewActivity" "Post a new activity"}}</label>
         <form action="{{edit_resource_path .Result .Resource}}/!activity" method="POST">
-          <input type="hidden" name="type" value="activity">
+          {{render_form new_activity (edit_sections activity_resource) }}
           <input type="hidden" name="redirect_to" value="{{edit_resource_path .Result .Resource}}#activity">
-          <input type="hidden" name="action" value="{{dt "qor.activity.DefaultAction" "comment"}}">
-          <div>
-            <label>{{dt "qor.activity.Content" "Content"}}</label>
-            <br/>
-            <textarea name="content"></textarea>
+          <div class="qor-form__actions">
+            <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect qor-button--save" type="submit">{{t "Save Changes"}}</button>
           </div>
-          <div>
-            <label>Note</label>
-            <br/>
-            <input type="text" name="note" value="">
-          </div>
-          <button>Submit</button>
         </form>
       </div>
     </div>

@@ -8,10 +8,10 @@ import (
 
 func CreateActivityHandler(context *admin.Context) {
 	var activity = QorActivity{
-		Type:    context.Request.Form.Get("type"),
-		Action:  context.Request.Form.Get("action"),
-		Content: context.Request.Form.Get("content"),
-		Note:    context.Request.Form.Get("note"),
+		Type:    context.Request.Form.Get("QorResource.Type"),
+		Action:  context.Request.Form.Get("QorResource.Action"),
+		Content: context.Request.Form.Get("QorResource.Content"),
+		Note:    context.Request.Form.Get("QorResource.Note"),
 	}
 	userName := context.CurrentUser.DisplayName()
 	activity.SetCreatedBy(userName)
