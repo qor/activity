@@ -19,11 +19,11 @@
   <div class="qor-tabs-panel-template" style="display:none;">
     <div class="mdl-tabs__panel qor-activity-container" id="activity-panel">
       <div class="qor-activities-history">
-        <label class="qor-field__label" style="font-size: 16px; font-weight: bold;">{{dt (printf "%v.attributes.activity.History" .Resource.ToParam) "Activities"}}</label>
+        <label class="qor-field__label" style="font-size: 16px; font-weight: bold;">{{dt "qor.activity.Activities" "Activities"}}</label>
         {{range $activity := get_activities . "-tag"}}
           <div style="background-color: rgb(242, 242, 242);padding: 10px 20px; margin: 10px 0px;border-radius: 5px;width: 80%">
             <div style="font-size: 16px;">
-              <b>{{$activity.UpdatedBy}}</b> {{$activity.Subject}}
+              <b>{{$activity.UpdatedBy}}</b> {{$activity.Action}}
             </div>
             <div style="color: rgb(185, 185, 185); font-size: 14px;margin-bottom: 8px;">
               {{formatted_datetime $activity.UpdatedAt}}
@@ -32,17 +32,16 @@
             <div><b>Note:</b> {{$activity.Note}}</div>
           </div>
         {{end}}
+      </div>
 
+      <div class="qor-activities-new" style="margin-top: 30px;">
+        <label class="qor-field__label" style="font-size: 16px; font-weight: bold;">{{dt "qor.activity.NewActivity" "Post a new activity"}}</label>
         <form action="{{edit_resource_path .Result .Resource}}/!activity" method="POST">
           <input type="hidden" name="type" value="activity">
           <input type="hidden" name="redirect_to" value="{{edit_resource_path .Result .Resource}}#activity">
+          <input type="hidden" name="action" value="{{dt "qor.activity.DefaultAction" "comment"}}">
           <div>
-            <label>Subject</label>
-            <br/>
-            <input name="subject">
-          </div>
-          <div>
-            <label>Content</label>
+            <label>{{dt "qor.activity.Content" "Content"}}</label>
             <br/>
             <textarea name="content"></textarea>
           </div>

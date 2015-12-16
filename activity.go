@@ -14,7 +14,7 @@ import (
 
 type QorActivity struct {
 	gorm.Model
-	Subject      string
+	Action       string
 	Content      string
 	Note         string
 	Type         string

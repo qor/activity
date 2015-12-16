@@ -9,7 +9,7 @@ import (
 func CreateActivityHandler(context *admin.Context) {
 	var activity = QorActivity{
 		Type:    context.Request.Form.Get("type"),
-		Subject: context.Request.Form.Get("subject"),
+		Action:  context.Request.Form.Get("action"),
 		Content: context.Request.Form.Get("content"),
 		Note:    context.Request.Form.Get("note"),
 	}
