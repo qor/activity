@@ -26,7 +26,7 @@ type QorActivity struct {
 	audited.AuditedModel
 }
 
-func RegisterActivityMeta(res *admin.Resource) {
+func Register(res *admin.Resource) {
 	for _, gopath := range strings.Split(os.Getenv("GOPATH"), ":") {
 		admin.RegisterViewPath(path.Join(gopath, "src/github.com/qor/activity/views"))
 	}
@@ -66,6 +66,11 @@ func RegisterActivityMeta(res *admin.Resource) {
 		return QorActivity{}
 	})
 
+	qorAdmin.RegisterFuncMap("is_edit_or_show", func(context *admin.Context) bool {
+		return context.Action == "edit" || context.Action == "show"
+	})
+
 	router := res.GetAdmin().GetRouter()
 	router.Post(fmt.Sprintf("/%v/(.*?)/!activity", res.ToParam()), CreateActivityHandler)
+	router.Post(fmt.Sprintf("/%v/(.*?)/edit/!custom", qorAdmin.GetResource("QorActivity").ToParam()), UpdateActivityHandler)
 }

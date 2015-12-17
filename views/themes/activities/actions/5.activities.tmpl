@@ -1,0 +1,68 @@
+{{ if is_edit_or_show . }}
+{{$resource := .Resource}}
+{{$result := .Result}}
+<div id="qor-activity" style="display:none;">
+  <script type="text/javascript">
+    $(document).ready(function() {
+      QorActivity.init();
+    });
+  </script>
+
+  <div class="qor-tabs-template" style="display:none;">
+    <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+      <div class="mdl-tabs__tab-bar">
+      </div>
+    </div>
+  </div>
+
+  <div class="qor-tabs-tab-template" style="display:none;">
+    <a href="#activity-panel" class="mdl-tabs__tab">Activity</a>
+  </div>
+
+  <div class="qor-tabs-panel-template" style="display:none;">
+    <div class="mdl-tabs__panel qor-activity-container" id="activity-panel">
+      <div class="qor-activities-history">
+        <label class="qor-field__label" style="font-size: 16px; font-weight: bold;">{{dt "activity.Activities" "Activities"}}</label>
+        {{range $activity := get_activities . "-tag"}}
+          <div class="qor-js-activity-item" style="background-color: rgb(242, 242, 242);padding: 10px 20px; margin: 10px 0px;border-radius: 5px;width: 80%">
+            <form action="{{edit_resource_path $activity activity_resource}}/!custom" method="POST">
+              <input type="hidden" name="QorResource.ID" value="{{$activity.ID}}">
+              <input type="hidden" name="redirect_to" value="{{edit_resource_path $result $resource}}#activity">
+              <div style="font-size: 16px;">
+                <b>{{$activity.UpdatedBy}}</b> {{dt (printf "activity.%v" $activity.Action) $activity.Action }}
+              </div>
+              <div style="color: rgb(185, 185, 185); font-size: 14px;margin-bottom: 8px;">
+                {{formatted_datetime $activity.UpdatedAt}}
+              </div>
+              <div style="margin-bottom: 10px;">{{formatted_content $activity.Content}}</div>
+              <div>
+                <b>Note:</b>
+                <span class="qor-js-activity-note">
+                  {{$activity.Note}}
+                </span>
+                <i class="qor-js-activity-edit material-icons md-18" style="float: right; position: relative; top: 4px;">edit</i>
+                <button class="qor-js-activity-save" style="display:none;float:right; position: relative; top: 30px;">save</button>
+                <div class="qor-js-activity-input mdl-textfield mdl-js-textfield" style="display:none;">
+                  <label class="mdl-textfield__label">{{$activity.Note}}</label>
+                  <input class="mdl-textfield__input" type="text" name="QorResource.Note">
+                </div>
+              </div>
+            </form>
+          </div>
+        {{end}}
+      </div>
+
+      <div class="qor-activities-new" style="margin-top: 30px;">
+        <label class="qor-field__label" style="font-size: 16px; font-weight: bold;">{{dt "activity.NewActivity" "Post a new activity"}}</label>
+        <form action="{{edit_resource_path .Result .Resource}}/!activity" method="POST">
+          {{render_form new_activity (edit_sections activity_resource) }}
+          <input type="hidden" name="redirect_to" value="{{edit_resource_path .Result .Resource}}#activity">
+          <div class="qor-form__actions">
+            <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect qor-button--save" type="submit">{{t "Save Changes"}}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}

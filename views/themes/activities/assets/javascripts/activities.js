@@ -18,6 +18,7 @@ QorActivity = {
 
   bindingEvents : function() {
     this.$scoped.on("click", ".qor-page__body .mdl-tabs__tab", this.switchTab);
+    this.$scoped.on("click", ".qor-js-activity-item .qor-js-activity-edit", this.makeNoteEditable);
   },
 
   appendTabsToFormContainer : function() {
@@ -55,5 +56,13 @@ QorActivity = {
     console.info(href == "#activity-panel" ? href.replace("-panel", "") : href);
     location.hash = href == "#activity-panel" ? href.replace("-panel", "") : href;
     return false;
+  },
+
+  makeNoteEditable : function() {
+    var $item = $(this).parents(".qor-js-activity-item");
+    $item.find(".qor-js-activity-note").hide();
+    $item.find(".qor-js-activity-input").show();
+    $(this).hide();
+    $item.find(".qor-js-activity-save").show();
   }
 }
