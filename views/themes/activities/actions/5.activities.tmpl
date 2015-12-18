@@ -9,14 +9,14 @@
   </script>
 
   <div class="qor-tabs-template" style="display:none;">
-    <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+    <div class="qor-js-action-tabs mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
       <div class="mdl-tabs__tab-bar">
       </div>
     </div>
   </div>
 
   <div class="qor-tabs-tab-template" style="display:none;">
-    <a href="#activity-panel" class="mdl-tabs__tab">Activity</a>
+    <a href="#tab-activity-panel" class="qor-js-action-tab mdl-tabs__tab">Activity</a>
   </div>
 
   <div class="qor-tabs-panel-template" style="display:none;">
@@ -29,7 +29,7 @@
               <input type="hidden" name="QorResource.ID" value="{{$activity.ID}}">
               <input type="hidden" name="redirect_to" value="{{edit_resource_path $result $resource}}#activity">
               <div style="font-size: 16px;">
-                <b>{{$activity.CreatorName}}</b> {{dt (printf "activity.%v" $activity.Action) $activity.Action }}
+                <b>{{$activity.CreatorName}}</b> <i>{{dt (printf "activity.%v" $activity.Action) $activity.Action }}</i>
               </div>
               <div style="color: rgb(185, 185, 185); font-size: 14px;margin-bottom: 8px;">
                 {{formatted_datetime $activity.UpdatedAt}}

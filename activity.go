@@ -40,7 +40,7 @@ func Register(res *admin.Resource) {
 		assetManager := qorAdmin.AddResource(&media_library.AssetManager{}, &admin.Config{Invisible: true})
 		activity := qorAdmin.AddResource(QorActivity{}, &admin.Config{Invisible: true})
 		activity.Meta(&admin.Meta{Name: "Action", Type: "hidden", Valuer: func(value interface{}, ctx *qor.Context) interface{} {
-			return "comment"
+			return "comment on"
 		}})
 		activity.Meta(&admin.Meta{Name: "Content", Type: "rich_editor", Resource: assetManager})
 		activity.EditAttrs("Action", "Content", "Note")
