@@ -27,7 +27,7 @@
           <div class="qor-js-activity-item" style="background-color: rgb(242, 242, 242);padding: 10px 20px; margin: 10px 0px;border-radius: 5px;width: 80%">
             <form action="/admin/{{$resource.ToParam}}/{{$result.ID}}/!{{activity_resource.ToParam}}/{{$activity.ID}}/edit" method="POST">
               <input type="hidden" name="QorResource.ID" value="{{$activity.ID}}">
-              <input type="hidden" name="redirect_to" value="{{edit_resource_path $result $resource}}#activity">
+              <input type="hidden" name="redirect_to" value="{{edit_resource_path $result $resource}}#tab-activity-panel">
               <div style="font-size: 16px;">
                 <b>{{$activity.CreatorName}}</b> <i>{{dt (printf "activity.%v" $activity.Action) $activity.Action }}</i>
               </div>
@@ -37,11 +37,11 @@
               <div style="margin-bottom: 10px;">{{formatted_content $activity.Content}}</div>
               <div>
                 <b>Note:</b>
-                <span class="qor-js-activity-note">
+                <span class="qor-js-activity-note" style="padding: 20px 0;display:inline-block;">
                   {{$activity.Note}}
                 </span>
-                <i class="qor-js-activity-edit material-icons md-18" style="float: right; position: relative; top: 4px;">edit</i>
-                <button class="qor-js-activity-save" style="display:none;float:right; position: relative; top: 30px;">save</button>
+                <i class="qor-js-activity-edit material-icons md-18" style="float: right; position: relative; top: 25px;cursor: pointer;">edit</i>
+                <button class="qor-js-activity-save" style="display:none;float:right; position: relative; top: 30px;background-color: rgb(33,150,243); color: white; border: none; padding: 5px 15px 6px 15px; border-radius: 3px;cursor: pointer;">save</button>
                 <div class="qor-js-activity-input mdl-textfield mdl-js-textfield" style="display:none;">
                   <label class="mdl-textfield__label">{{$activity.Note}}</label>
                   <input class="mdl-textfield__input" type="text" name="QorResource.Note">
@@ -56,7 +56,7 @@
         <label class="qor-field__label" style="font-size: 16px; font-weight: bold;">{{dt "activity.NewActivity" "Post a new activity"}}</label>
         <form action="/admin/{{$resource.ToParam}}/{{$result.ID}}/!{{activity_resource.ToParam}}" method="POST">
           {{render_form new_activity (edit_sections activity_resource) }}
-          <input type="hidden" name="redirect_to" value="{{edit_resource_path .Result .Resource}}#activity">
+          <input type="hidden" name="redirect_to" value="{{edit_resource_path .Result .Resource}}#tab-activity-panel">
           <div class="qor-form__actions">
             <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect qor-button--save" type="submit">{{t "Save Changes"}}</button>
           </div>
