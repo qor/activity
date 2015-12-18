@@ -41,6 +41,14 @@ func Register(res *admin.Resource) {
 		}})
 		activity.Meta(&admin.Meta{Name: "Content", Type: "rich_editor", Resource: assetManager})
 		activity.EditAttrs("Action", "Content", "Note")
+		activity.AddValidator(func(record interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
+			if meta := metaValues.Get("Content"); meta != nil {
+				if name := utils.ToString(meta.Value); strings.TrimSpace(name) == "" {
+					return validations.NewError(record, "Content", "Content can't be blank")
+				}
+			}
+			return nil
+		})
 	}
 
 	res.UseTheme("activities")
