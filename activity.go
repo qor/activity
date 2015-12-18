@@ -13,6 +13,9 @@ import (
 	"github.com/qor/qor"
 	"github.com/qor/qor/admin"
 	"github.com/qor/qor/audited"
+	"github.com/qor/qor/resource"
+	"github.com/qor/qor/utils"
+	"github.com/qor/qor/validations"
 )
 
 type QorActivity struct {
@@ -23,6 +26,7 @@ type QorActivity struct {
 	Type         string
 	ResourceType string
 	ResourceID   string
+	CreatorName  string
 	audited.AuditedModel
 }
 
@@ -32,8 +36,7 @@ func Register(res *admin.Resource) {
 	}
 
 	qorAdmin := res.GetAdmin()
-	resource := qorAdmin.GetResource("QorActivity")
-	if resource == nil {
+	if qorAdmin.GetResource("QorActivity") == nil {
 		assetManager := qorAdmin.AddResource(&media_library.AssetManager{}, &admin.Config{Invisible: true})
 		activity := qorAdmin.AddResource(QorActivity{}, &admin.Config{Invisible: true})
 		activity.Meta(&admin.Meta{Name: "Action", Type: "hidden", Valuer: func(value interface{}, ctx *qor.Context) interface{} {
@@ -79,6 +82,6 @@ func Register(res *admin.Resource) {
 	})
 
 	router := res.GetAdmin().GetRouter()
-	router.Post(fmt.Sprintf("/%v/(.*?)/!activity", res.ToParam()), CreateActivityHandler)
-	router.Post(fmt.Sprintf("/%v/(.*?)/edit/!custom", qorAdmin.GetResource("QorActivity").ToParam()), UpdateActivityHandler)
+	router.Post(fmt.Sprintf("/%v/(.*?)/!%v", res.ToParam(), qorAdmin.GetResource("QorActivity").ToParam()), CreateActivityHandler)
+	router.Post(fmt.Sprintf("/%v/(.*?)/!%v/(.*?)/edit", res.ToParam(), qorAdmin.GetResource("QorActivity").ToParam()), UpdateActivityHandler)
 }
