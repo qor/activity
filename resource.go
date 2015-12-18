@@ -26,7 +26,7 @@ func CreateActivity(activity QorActivity, context *admin.Context) error {
 
 func GetActivities(context *admin.Context, types ...string) ([]QorActivity, error) {
 	var activities []QorActivity
-	db := context.GetDB().Where("resource_id = ? AND resource_type = ?", getPrimaryKey(context), context.Resource.ToParam())
+	db := context.GetDB().Order("updated_at desc").Where("resource_id = ? AND resource_type = ?", getPrimaryKey(context), context.Resource.ToParam())
 
 	var inTypes, notInTypes []string
 	for _, t := range types {
