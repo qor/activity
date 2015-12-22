@@ -2,7 +2,7 @@ package activity
 
 import (
 	"github.com/qor/qor/admin"
-	"github.com/qor/qor/responder"
+	"github.com/qor/responder"
 	"net/http"
 	"regexp"
 )
@@ -28,14 +28,14 @@ func CreateActivityHandler(context *admin.Context) {
 			http.Redirect(context.Writer, context.Request, context.Request.PostFormValue("redirect_to"), http.StatusFound)
 		}).With("json", func() {
 			context.JSON("edit", map[string]interface{}{"errors": context.GetErrors()})
-		}).Respond(context.Writer, context.Request)
+		}).Respond(context.Request)
 	} else {
 		responder.With("html", func() {
-			context.Flash(string(context.T("resource_successfully_created", "Activity was successfully created")), "success")
+			context.Flash(string(context.Admin.T(context.Context, "resource_successfully_created", "Activity was successfully created")), "success")
 			http.Redirect(context.Writer, context.Request, context.Request.PostFormValue("redirect_to"), http.StatusFound)
 		}).With("json", func() {
 			context.JSON("edit", result)
-		}).Respond(context.Writer, context.Request)
+		}).Respond(context.Request)
 	}
 }
 
@@ -60,13 +60,13 @@ func UpdateActivityHandler(context *admin.Context) {
 			http.Redirect(context.Writer, context.Request, context.Request.PostFormValue("redirect_to"), http.StatusFound)
 		}).With("json", func() {
 			context.JSON("edit", map[string]interface{}{"errors": context.GetErrors()})
-		}).Respond(context.Writer, context.Request)
+		}).Respond(context.Request)
 	} else {
 		responder.With("html", func() {
-			context.Flash(string(context.T("resource_successfully_created", "Activity was successfully created")), "success")
+			context.Flash(string(context.Admin.T(context.Context, "resource_successfully_created", "Activity was successfully created")), "success")
 			http.Redirect(context.Writer, context.Request, context.Request.PostFormValue("redirect_to"), http.StatusFound)
 		}).With("json", func() {
 			context.JSON("edit", result)
-		}).Respond(context.Writer, context.Request)
+		}).Respond(context.Request)
 	}
 }
