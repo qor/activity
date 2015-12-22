@@ -1,10 +1,10 @@
 package activity
 
 import (
+	"net/http"
+
 	"github.com/qor/qor/admin"
 	"github.com/qor/responder"
-	"net/http"
-	"regexp"
 )
 
 func CreateActivityHandler(context *admin.Context) {
@@ -42,8 +42,7 @@ func CreateActivityHandler(context *admin.Context) {
 func UpdateActivityHandler(context *admin.Context) {
 	c := context.Admin.NewContext(context.Writer, context.Request)
 	c.Resource = context.GetResource("QorActivity")
-	re := regexp.MustCompile("/(\\d?)/edit$")
-	activityID := re.FindString(context.Request.URL.Path)
+	activityID := context.Request.URL.Query().Get(":activity_id")
 	c.ResourceID = activityID
 	result, err := c.FindOne()
 

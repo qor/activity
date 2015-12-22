@@ -82,6 +82,6 @@ func Register(res *admin.Resource) {
 	})
 
 	router := res.GetAdmin().GetRouter()
-	router.Post(fmt.Sprintf("/%v/(.*?)/!%v", res.ToParam(), qorAdmin.GetResource("QorActivity").ToParam()), CreateActivityHandler)
-	router.Post(fmt.Sprintf("/%v/(.*?)/!%v/(.*?)/edit", res.ToParam(), qorAdmin.GetResource("QorActivity").ToParam()), UpdateActivityHandler)
+	router.Post(fmt.Sprintf("/%v/:id/!%v", res.ToParam(), qorAdmin.GetResource("QorActivity").ToParam()), CreateActivityHandler)
+	router.Post(fmt.Sprintf("/%v/:id/!%v/:activity_id/edit", res.ToParam(), qorAdmin.GetResource("QorActivity").ToParam()), UpdateActivityHandler)
 }
