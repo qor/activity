@@ -76,14 +76,6 @@ func Register(res *admin.Resource) {
 		return qorAdmin.GetResource("QorActivity")
 	})
 
-	qorAdmin.RegisterFuncMap("new_activity", func() QorActivity {
-		return QorActivity{}
-	})
-
-	qorAdmin.RegisterFuncMap("is_edit_or_show", func(context *admin.Context) bool {
-		return context.Action == "edit" || context.Action == "show"
-	})
-
 	router := res.GetAdmin().GetRouter()
 	router.Post(fmt.Sprintf("/%v/:id/!%v", res.ToParam(), qorAdmin.GetResource("QorActivity").ToParam()), CreateActivityHandler)
 	router.Post(fmt.Sprintf("/%v/:id/!%v/:activity_id/edit", res.ToParam(), qorAdmin.GetResource("QorActivity").ToParam()), UpdateActivityHandler)
