@@ -1,4 +1,4 @@
-{{ if is_edit_or_show . }}
+{{if (or (eq .Action "edit") (eq .Action "show")) }}
 {{$resource := .Resource}}
 {{$result := .Result}}
 <div id="qor-activity" style="display:none;">
@@ -27,7 +27,6 @@
           <div class="qor-js-activity-item" style="background-color: rgb(242, 242, 242);padding: 10px 20px; margin: 10px 0px;border-radius: 5px;width: 80%">
             <form action="/admin/{{$resource.ToParam}}/{{$result.ID}}/!{{activity_resource.ToParam}}/{{$activity.ID}}/edit" method="POST">
               <input type="hidden" name="QorResource.ID" value="{{$activity.ID}}">
-              <input type="hidden" name="redirect_to" value="{{edit_resource_path $result $resource}}#tab-activity-panel">
               <div style="font-size: 16px;">
                 <b>{{$activity.CreatorName}}</b> <i>{{dt (printf "activity.%v" $activity.Action) $activity.Action }}</i>
               </div>
@@ -55,8 +54,7 @@
       <div class="qor-activities-new" style="margin-top: 30px;">
         <label class="qor-field__label" style="font-size: 16px; font-weight: bold;">{{dt "activity.NewActivity" "Post a new activity"}}</label>
         <form action="/admin/{{$resource.ToParam}}/{{$result.ID}}/!{{activity_resource.ToParam}}" method="POST">
-          {{render_form new_activity (edit_sections activity_resource) }}
-          <input type="hidden" name="redirect_to" value="{{edit_resource_path .Result .Resource}}#tab-activity-panel">
+          {{render_form activity_resource.NewStruct (edit_sections activity_resource) }}
           <div class="qor-form__actions">
             <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect qor-button--save" type="submit">{{t "Save Changes"}}</button>
           </div>

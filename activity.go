@@ -21,8 +21,8 @@ import (
 type QorActivity struct {
 	gorm.Model
 	Action       string
-	Content      string
-	Note         string
+	Content      string `sql:"size:5000"`
+	Note         string `sql:"size:2000"`
 	Type         string
 	ResourceType string
 	ResourceID   string
@@ -37,7 +37,10 @@ func Register(res *admin.Resource) {
 
 	qorAdmin := res.GetAdmin()
 	if qorAdmin.GetResource("QorActivity") == nil {
-		assetManager := qorAdmin.AddResource(&media_library.AssetManager{}, &admin.Config{Invisible: true})
+		assetManager := qorAdmin.GetResource("AssetManager")
+		if assetManager == nil {
+			assetManager = qorAdmin.AddResource(&media_library.AssetManager{}, &admin.Config{Invisible: true})
+		}
 		activity := qorAdmin.AddResource(QorActivity{}, &admin.Config{Invisible: true})
 		activity.Meta(&admin.Meta{Name: "Action", Type: "hidden", Valuer: func(value interface{}, ctx *qor.Context) interface{} {
 			return "comment on"

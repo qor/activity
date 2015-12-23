@@ -22,17 +22,18 @@ func CreateActivityHandler(context *admin.Context) {
 	}
 	context.AddError(err)
 
+	redirect_to := context.Request.Referer() + "#tab-activity-panel"
 	if context.HasError() {
 		responder.With("html", func() {
 			context.Flash(context.Error(), "error")
-			http.Redirect(context.Writer, context.Request, context.Request.PostFormValue("redirect_to"), http.StatusFound)
+			http.Redirect(context.Writer, context.Request, redirect_to, http.StatusFound)
 		}).With("json", func() {
 			context.JSON("edit", map[string]interface{}{"errors": context.GetErrors()})
 		}).Respond(context.Request)
 	} else {
 		responder.With("html", func() {
-			context.Flash(string(context.Admin.T(context.Context, "resource_successfully_created", "Activity was successfully created")), "success")
-			http.Redirect(context.Writer, context.Request, context.Request.PostFormValue("redirect_to"), http.StatusFound)
+			context.Flash(string(context.Admin.T(context.Context, "activity.successfully_created", "Activity was successfully created")), "success")
+			http.Redirect(context.Writer, context.Request, redirect_to, http.StatusFound)
 		}).With("json", func() {
 			context.JSON("edit", result)
 		}).Respond(context.Request)
@@ -41,29 +42,30 @@ func CreateActivityHandler(context *admin.Context) {
 
 func UpdateActivityHandler(context *admin.Context) {
 	c := context.Admin.NewContext(context.Writer, context.Request)
-	c.Resource = context.GetResource("QorActivity")
-	activityID := context.Request.URL.Query().Get(":activity_id")
-	c.ResourceID = activityID
+	c.ResourceID = context.Request.URL.Query().Get(":activity_id")
+	c.Resource = context.Admin.GetResource("QorActivity")
+	c.Searcher = &admin.Searcher{Context: c}
 	result, err := c.FindOne()
 
 	context.AddError(err)
 	if !context.HasError() {
-		if context.AddError(context.Resource.Decode(context.Context, result)); !context.HasError() {
-			context.AddError(context.Resource.CallSave(result, context.Context))
+		if context.AddError(c.Resource.Decode(c.Context, result)); !context.HasError() {
+			context.AddError(context.Resource.CallSave(result, c.Context))
 		}
 	}
 
+	redirect_to := context.Request.Referer() + "#tab-activity-panel"
 	if context.HasError() {
 		context.Writer.WriteHeader(admin.HTTPUnprocessableEntity)
 		responder.With("html", func() {
-			http.Redirect(context.Writer, context.Request, context.Request.PostFormValue("redirect_to"), http.StatusFound)
+			http.Redirect(context.Writer, context.Request, redirect_to, http.StatusFound)
 		}).With("json", func() {
 			context.JSON("edit", map[string]interface{}{"errors": context.GetErrors()})
 		}).Respond(context.Request)
 	} else {
 		responder.With("html", func() {
-			context.Flash(string(context.Admin.T(context.Context, "resource_successfully_created", "Activity was successfully created")), "success")
-			http.Redirect(context.Writer, context.Request, context.Request.PostFormValue("redirect_to"), http.StatusFound)
+			context.Flash(string(context.Admin.T(context.Context, "activity.successfully_updated", "Activity was successfully updated")), "success")
+			http.Redirect(context.Writer, context.Request, redirect_to, http.StatusFound)
 		}).With("json", func() {
 			context.JSON("edit", result)
 		}).Respond(context.Request)
