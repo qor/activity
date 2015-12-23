@@ -41,7 +41,7 @@ func Register(res *admin.Resource) {
 		if assetManager == nil {
 			assetManager = qorAdmin.AddResource(&media_library.AssetManager{}, &admin.Config{Invisible: true})
 		}
-		activity := qorAdmin.AddResource(QorActivity{}, &admin.Config{Invisible: true})
+		activity := qorAdmin.AddResource(&QorActivity{}, &admin.Config{Invisible: true})
 		activity.Meta(&admin.Meta{Name: "Action", Type: "hidden", Valuer: func(value interface{}, ctx *qor.Context) interface{} {
 			return "comment on"
 		}})
