@@ -57,7 +57,7 @@ func Register(res *admin.Resource) {
 		})
 	}
 
-	res.UseTheme("activities")
+	res.UseTheme("activity")
 
 	qorAdmin.RegisterFuncMap("get_activities", func(context *admin.Context, types ...string) []QorActivity {
 		activities, _ := GetActivities(context, types...)
