@@ -116,5 +116,3 @@
   return QorActivity;
 
 });
-
-//# sourceMappingURL=activity.js.map
