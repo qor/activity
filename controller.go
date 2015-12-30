@@ -10,9 +10,9 @@ import (
 func CreateActivityHandler(context *admin.Context) {
 	result, err := context.FindOne()
 	activityResource := context.GetResource("QorActivity")
+	newActivity := &QorActivity{}
 	if err == nil {
 		context.Result = result
-		newActivity := &QorActivity{}
 		if context.AddError(activityResource.Decode(context.Context, newActivity)); !context.HasError() {
 			newActivity.ResourceType = context.Resource.ToParam()
 			newActivity.ResourceID = getPrimaryKey(context)
@@ -35,7 +35,8 @@ func CreateActivityHandler(context *admin.Context) {
 			context.Flash(string(context.Admin.T(context.Context, "activity.successfully_created", "Activity was successfully created")), "success")
 			http.Redirect(context.Writer, context.Request, redirect_to, http.StatusFound)
 		}).With("json", func() {
-			context.JSON("edit", result)
+			context.Resource = activityResource
+			context.JSON("edit", newActivity)
 		}).Respond(context.Request)
 	}
 }
@@ -67,7 +68,7 @@ func UpdateActivityHandler(context *admin.Context) {
 			context.Flash(string(context.Admin.T(context.Context, "activity.successfully_updated", "Activity was successfully updated")), "success")
 			http.Redirect(context.Writer, context.Request, redirect_to, http.StatusFound)
 		}).With("json", func() {
-			context.JSON("edit", result)
+			c.JSON("edit", result)
 		}).Respond(context.Request)
 	}
 }
