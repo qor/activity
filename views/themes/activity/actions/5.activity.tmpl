@@ -14,7 +14,7 @@
   <div class="qor-activity__lists">
     {{range $activity := get_activities . "-tag"}}
       <div class="qor-activity__list">
-        <form action="/admin/{{$resource.ToParam}}/{{$result.ID}}/!{{activity_resource.ToParam}}/{{$activity.ID}}/edit" method="POST">
+        <form class="qor-activity__edit-note_form" action="/admin/{{$resource.ToParam}}/{{$result.ID}}/!{{activity_resource.ToParam}}/{{$activity.ID}}/edit" method="POST">
           <input type="hidden" name="QorResource.ID" value="{{$activity.ID}}">
           <div class="qor-activity__list-title">
             <strong>{{$activity.CreatorName}}</strong> <span>{{dt (printf "activity.%v" $activity.Action) $activity.Action }}</span>
@@ -45,7 +45,7 @@
   </div>
   <div class="qor-activities__new">
     <h4 class="qor-section-title">{{dt "activity.NewActivity" "Post a new activity"}}</h4>
-    <form action="/admin/{{$resource.ToParam}}/{{$result.ID}}/!{{activity_resource.ToParam}}" method="POST">
+    <form class="qor-activity__new-note_form" action="/admin/{{$resource.ToParam}}/{{$result.ID}}/!{{activity_resource.ToParam}}" method="POST">
       {{render_form activity_resource.NewStruct (edit_sections activity_resource) }}
       <div class="qor-form__actions">
         <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect qor-button--save" type="submit">{{t "Save Changes"}}</button>

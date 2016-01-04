@@ -13,11 +13,16 @@
 
   'use strict';
 
+  var FormData = window.FormData;
   var NAMESPACE = 'qor.activity';
   var EVENT_ENABLE = 'enable.' + NAMESPACE;
   var EVENT_DISABLE = 'disable.' + NAMESPACE;
   var EVENT_CLICK = 'click.' + NAMESPACE;
+  var EVENT_SUBMIT = 'submit.' + NAMESPACE;
   var CLASS_EDIT_NOTE = 'qor-activity__edit-button';
+  var CLASS_EDIT_NOTE_FORM = 'qor-activity__edit-note_form';
+  var CLASS_NEW_NOTE_FORM = 'qor-activity__new-note_form';
+  var CLASS_SAVE_NOTE = 'qor-activity__edit-save-button';
 
   function QorActivity(element, options) {
     this.$element = $(element);
@@ -35,21 +40,58 @@
     },
 
     bind: function () {
-      this.$element.on(EVENT_CLICK, $.proxy(this.click, this));
+      this.$element.
+      on(EVENT_CLICK, $.proxy(this.click, this)).
+      on(EVENT_SUBMIT,'form', $.proxy(this.submit, this));
+    },
+
+    submit: function(e){
+      var form = e.target;
+      var $form = $(e.target);
+      var FormDatas;
+      var _this = this;
+
+        e.preventDefault();
+
+        FormDatas = $form.serialize();
+        $.ajax($form.prop('action'), {
+          method: $form.prop('method'),
+          data: FormDatas,
+          dataType: 'json'
+        }).done(function(data){
+          console.log(data)
+          if($form.hasClass(CLASS_EDIT_NOTE_FORM)){
+            _this.hideEditForm($form);
+            $form.find('.qor-activity__list-note').html(data.Note);
+          }
+
+          if($form.hasClass(CLASS_NEW_NOTE_FORM)){
+
+          }
+        });
+
+      return false;
+
     },
 
     click: function (e) {
       var $target = $(e.target);
       e.stopPropagation();
 
-      console.log($target)
-
       if($target.hasClass(CLASS_EDIT_NOTE)){
         var parents = $target.closest(".qor-activity__list");
-        parents.find('.qor-activity__list-note,.qor-activity__edit-button').addClass('hide');
-        parents.find('.qor-activity__edit-feilds,.qor-activity__edit-save-button').addClass('show');
+        this.showEditForm(parents)
       }
 
+    },
+    showEditForm: function(ele){
+      ele.find('.qor-activity__list-note,.qor-activity__edit-button').removeClass('show').addClass('hide');
+      ele.find('.qor-activity__edit-feilds,.qor-activity__edit-save-button').removeClass('hide').addClass('show');
+    },
+
+    hideEditForm: function(ele){
+      ele.find('.qor-activity__list-note,.qor-activity__edit-button').removeClass('hide').addClass('show');
+      ele.find('.qor-activity__edit-feilds,.qor-activity__edit-save-button').removeClass('show').addClass('hide');
     }
   };
 
