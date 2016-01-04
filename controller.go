@@ -26,7 +26,7 @@ func (ctrl controller) CreateActivityHandler(context *admin.Context) {
 	}
 	context.AddError(err)
 
-	redirect_to := context.Request.Referer() + "#tab-activity-panel"
+	redirect_to := context.Request.Referer()
 	if context.HasError() {
 		responder.With("html", func() {
 			context.Flash(context.Error(), "error")
@@ -47,7 +47,7 @@ func (ctrl controller) CreateActivityHandler(context *admin.Context) {
 
 func (ctrl controller) UpdateActivityHandler(context *admin.Context) {
 	c := context.Admin.NewContext(context.Writer, context.Request)
-	c.ResourceID = context.Request.URL.Query().Get(":activity_id")
+	c.ResourceID = ctrl.ActivityResource.GetPrimaryValue(context.Request)
 	c.Resource = ctrl.ActivityResource
 	c.Searcher = &admin.Searcher{Context: c}
 	result, err := c.FindOne()
@@ -59,7 +59,7 @@ func (ctrl controller) UpdateActivityHandler(context *admin.Context) {
 		}
 	}
 
-	redirect_to := context.Request.Referer() + "#tab-activity-panel"
+	redirect_to := context.Request.Referer()
 	if context.HasError() {
 		context.Writer.WriteHeader(admin.HTTPUnprocessableEntity)
 		responder.With("html", func() {
