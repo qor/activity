@@ -37,8 +37,6 @@
             </div>
 
             <button class="qor-activity__edit-save-button" type="submit"><i class="material-icons md-24">save</i></button>
-
-
         </form>
       </div>
     {{end}}
@@ -54,6 +52,34 @@
   </div>
 
 </div>
+
+<script id="template__qor-activity__list" type="x-tmpl-mustache">
+  <div class="qor-activity__list">
+        <form class="qor-activity__edit-note_form" action=[[ URL ]] method="POST">
+          <input type="hidden" name="QorResource.ID" value=[[ ID ]]>
+          <div class="qor-activity__list-title">
+            <strong>[[ CreatorName ]]</strong> <span>[[ Action ]]</span>
+          </div>
+          <div class="qor-activity__list-date">
+            [[ UpdatedAt ]]
+          </div>
+          <div class="qor-activity__list-content">[[ &Content ]]</div>
+            <strong>Note:</strong>
+            <span class="qor-activity__list-note">
+              [[ Note ]]
+            </span>
+            <a class="mdl-button mdl-js-button mdl-button--icon qor-activity__edit-button" href="#">
+              <i class="material-icons md-18 qor-activity__edit-button">edit</i>
+            </a>
+
+            <div class="mdl-textfield mdl-js-textfield qor-activity__edit-feilds">
+              <label class="mdl-textfield__label">[[ Note ]]</label>
+              <input class="mdl-textfield__input" type="text" name="QorResource.Note">
+            </div>
+            <button class="qor-activity__edit-save-button" type="submit"><i class="material-icons md-24">save</i></button>
+        </form>
+      </div>
+</script>
 
 
 {{end}}
