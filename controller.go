@@ -11,6 +11,22 @@ type controller struct {
 	ActivityResource *admin.Resource
 }
 
+func (ctrl controller) GetActivityHandler(context *admin.Context) {
+	activities, _ := GetActivities(context, "-tag")
+	activityResource := ctrl.ActivityResource
+
+	if context.HasError() {
+		responder.With("json", func() {
+			context.JSON("edit", map[string]interface{}{"errors": context.GetErrors()})
+		}).Respond(context.Request)
+	} else {
+		responder.With("json", func() {
+			context.Resource = activityResource
+			context.JSON("index", activities)
+		}).Respond(context.Request)
+	}
+}
+
 func (ctrl controller) CreateActivityHandler(context *admin.Context) {
 	result, err := context.FindOne()
 	activityResource := ctrl.ActivityResource
@@ -72,7 +88,7 @@ func (ctrl controller) UpdateActivityHandler(context *admin.Context) {
 			context.Flash(string(context.Admin.T(context.Context, "activity.successfully_updated", "Activity was successfully updated")), "success")
 			http.Redirect(context.Writer, context.Request, redirect_to, http.StatusFound)
 		}).With("json", func() {
-			c.JSON("edit", result)
+			c.JSON("show", result)
 		}).Respond(context.Request)
 	}
 }
