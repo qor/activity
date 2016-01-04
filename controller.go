@@ -7,9 +7,13 @@ import (
 	"github.com/qor/responder"
 )
 
-func CreateActivityHandler(context *admin.Context) {
+type controller struct {
+	ActivityResource *admin.Resource
+}
+
+func (ctrl controller) CreateActivityHandler(context *admin.Context) {
 	result, err := context.FindOne()
-	activityResource := context.GetResource("QorActivity")
+	activityResource := ctrl.ActivityResource
 	newActivity := &QorActivity{}
 	if err == nil {
 		context.Result = result
@@ -36,15 +40,15 @@ func CreateActivityHandler(context *admin.Context) {
 			http.Redirect(context.Writer, context.Request, redirect_to, http.StatusFound)
 		}).With("json", func() {
 			context.Resource = activityResource
-			context.JSON("edit", newActivity)
+			context.JSON("show", newActivity)
 		}).Respond(context.Request)
 	}
 }
 
-func UpdateActivityHandler(context *admin.Context) {
+func (ctrl controller) UpdateActivityHandler(context *admin.Context) {
 	c := context.Admin.NewContext(context.Writer, context.Request)
 	c.ResourceID = context.Request.URL.Query().Get(":activity_id")
-	c.Resource = context.Admin.GetResource("QorActivity")
+	c.Resource = ctrl.ActivityResource
 	c.Searcher = &admin.Searcher{Context: c}
 	result, err := c.FindOne()
 

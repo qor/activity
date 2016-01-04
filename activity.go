@@ -36,26 +36,35 @@ func Register(res *admin.Resource) {
 	}
 
 	qorAdmin := res.GetAdmin()
-	if qorAdmin.GetResource("QorActivity") == nil {
-		assetManager := qorAdmin.GetResource("AssetManager")
-		if assetManager == nil {
-			assetManager = qorAdmin.AddResource(&media_library.AssetManager{}, &admin.Config{Invisible: true})
-		}
-		activity := qorAdmin.AddResource(&QorActivity{}, &admin.Config{Invisible: true})
-		activity.Meta(&admin.Meta{Name: "Action", Type: "hidden", Valuer: func(value interface{}, ctx *qor.Context) interface{} {
-			return "comment on"
-		}})
-		activity.Meta(&admin.Meta{Name: "Content", Type: "rich_editor", Resource: assetManager})
-		activity.EditAttrs("Action", "Content", "Note")
-		activity.AddValidator(func(record interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
-			if meta := metaValues.Get("Content"); meta != nil {
-				if name := utils.ToString(meta.Value); strings.TrimSpace(name) == "" {
-					return validations.NewError(record, "Content", "Content can't be blank")
-				}
-			}
-			return nil
-		})
+	assetManager := qorAdmin.GetResource("AssetManager")
+	if assetManager == nil {
+		assetManager = qorAdmin.AddResource(&media_library.AssetManager{}, &admin.Config{Invisible: true})
 	}
+	activityResource := qorAdmin.AddResource(&QorActivity{}, &admin.Config{Invisible: true})
+	activityResource.Meta(&admin.Meta{Name: "Action", Type: "hidden", Valuer: func(value interface{}, ctx *qor.Context) interface{} {
+		act := value.(*QorActivity)
+		if act.Action == "" {
+			act.Action = "comment on"
+		}
+		return activityResource.GetAdmin().T(ctx, "activity."+act.Action, act.Action)
+	}})
+	activityResource.Meta(&admin.Meta{Name: "UpdatedAt", Type: "hidden", Valuer: func(value interface{}, ctx *qor.Context) interface{} {
+		return value.(*QorActivity).UpdatedAt.Format("Jan 2 15:04")
+	}})
+	activityResource.Meta(&admin.Meta{Name: "URL", Valuer: func(value interface{}, ctx *qor.Context) interface{} {
+		return fmt.Sprintf("/admin/%v/%v/!%v/%v/edit", res.ToParam(), res.GetPrimaryValue(ctx.Request), activityResource.ToParam(), value.(*QorActivity).ID)
+	}})
+	activityResource.Meta(&admin.Meta{Name: "Content", Type: "rich_editor", Resource: assetManager})
+	activityResource.EditAttrs("Action", "Content", "Note")
+	activityResource.ShowAttrs("ID", "Action", "Content", "Note", "URL", "UpdatedAt", "CreatorName")
+	activityResource.AddValidator(func(record interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
+		if meta := metaValues.Get("Content"); meta != nil {
+			if name := utils.ToString(meta.Value); strings.TrimSpace(name) == "" {
+				return validations.NewError(record, "Content", "Content can't be blank")
+			}
+		}
+		return nil
+	})
 
 	res.UseTheme("activity")
 
@@ -77,6 +86,8 @@ func Register(res *admin.Resource) {
 	})
 
 	router := res.GetAdmin().GetRouter()
-	router.Post(fmt.Sprintf("/%v/:id/!%v", res.ToParam(), qorAdmin.GetResource("QorActivity").ToParam()), CreateActivityHandler)
-	router.Post(fmt.Sprintf("/%v/:id/!%v/:activity_id/edit", res.ToParam(), qorAdmin.GetResource("QorActivity").ToParam()), UpdateActivityHandler)
+
+	ctrl := controller{ActivityResource: activityResource}
+	router.Post(fmt.Sprintf("/%v/%v/!%v", res.ToParam(), res.ParamIDName(), qorAdmin.GetResource("QorActivity").ToParam()), ctrl.CreateActivityHandler)
+	router.Post(fmt.Sprintf("/%v/%v/!%v/:activity_id/edit", res.ToParam(), res.ParamIDName(), qorAdmin.GetResource("QorActivity").ToParam()), ctrl.UpdateActivityHandler)
 }
