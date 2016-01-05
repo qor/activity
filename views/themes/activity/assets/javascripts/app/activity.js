@@ -19,7 +19,8 @@
   var EVENT_DISABLE = 'disable.' + NAMESPACE;
   var EVENT_CLICK = 'click.' + NAMESPACE;
   var EVENT_SUBMIT = 'submit.' + NAMESPACE;
-  var CLASS_EDIT_NOTE = 'qor-activity__edit-button';
+  var CLASS_EDIT_NOTE = '.qor-activity__edit-button';
+  var CLASS_TAB_ACTIVITY = '.qor-tab__activity';
   var CLASS_EDIT_NOTE_FORM = '.qor-activity__edit-note_form';
   var CLASS_NEW_NOTE_FORM = '.qor-activity__new-note_form';
   var ID_LIST_TEMPLATE = '#template__qor-activity__list';
@@ -43,7 +44,9 @@
     bind: function () {
       this.$element.
       on(EVENT_CLICK, $.proxy(this.click, this)).
-      on(EVENT_SUBMIT, 'form', $.proxy(this.submit, this));
+      on(EVENT_SUBMIT, 'form', $.proxy(this.submit, this)),
+
+      $(document).on(EVENT_CLICK, CLASS_TAB_ACTIVITY, $.proxy(this.tabClick, this));
     },
 
     submit: function (e) {
@@ -51,7 +54,6 @@
       var $form = $(e.target);
       var FormDatas;
       var _this = this;
-      var activityListTemplate;
 
       e.preventDefault();
 
@@ -70,16 +72,18 @@
         }
 
         if ($form.is(CLASS_NEW_NOTE_FORM)){
-          activityListTemplate = QorActivity.ACTIVITY_LIST_TEMPLATE;
-          Mustache.parse(activityListTemplate);
-          var rendered = Mustache.render(activityListTemplate, data);
-          $(CLASS_LISTS).append(rendered);
+
+          $(CLASS_LISTS).append(_this.renderActivityList(data));
           _this.clearForm();
         }
       });
-
       return false;
+    },
 
+    renderActivityList: function (data) {
+      var activityListTemplate = QorActivity.ACTIVITY_LIST_TEMPLATE;
+      Mustache.parse(activityListTemplate);
+      return Mustache.render(activityListTemplate, data);
     },
 
     clearForm: function () {
@@ -91,12 +95,39 @@
       var $target = $(e.target);
       e.stopPropagation();
 
-      if ($target.hasClass(CLASS_EDIT_NOTE)){
+      if ($target.is(CLASS_EDIT_NOTE)){
         var parents = $target.closest('.qor-activity__list');
         this.showEditForm(parents);
       }
 
     },
+
+    tabClick: function (e) {
+      var _this = this;
+      var activityList = $(CLASS_LISTS).find('.qor-activity__list').size();
+      var actionId = $(CLASS_TAB_ACTIVITY).data('actionId');
+      var url = '/admin/orders/' + actionId + '/!qor_activities';
+
+      if (!activityList){
+        $.ajax({
+          url: url,
+          method: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            if (data.length){
+              for (var i = data.length - 1; i >= 0; i--) {
+                $(CLASS_LISTS).append(_this.renderActivityList(data[i]));
+              }
+              $(CLASS_LISTS).find('.mdl-spinner').remove();
+            }
+          }
+        });
+      } else {
+        $(CLASS_LISTS).find('.mdl-spinner').remove();
+      }
+
+    },
+
     showEditForm: function (ele) {
       ele.find('.qor-activity__list-note,.qor-activity__edit-button').removeClass('show').addClass('hide');
       ele.find('.qor-activity__edit-feilds,.qor-activity__edit-save-button').removeClass('hide').addClass('show');
