@@ -105,6 +105,11 @@
     tabClick: function (e) {
       var _this = this;
       var activityList = $(CLASS_LISTS).find('.qor-activity__list').size();
+
+      if (activityList){
+        return;
+      }
+
       var actionId = $(CLASS_TAB_ACTIVITY).data('actionId');
       var url = '/admin/orders/' + actionId + '/!qor_activities';
 
@@ -115,11 +120,13 @@
           dataType: 'json',
           success: function (data) {
             if (data.length){
+              $(CLASS_LISTS).html('');
               for (var i = data.length - 1; i >= 0; i--) {
                 $(CLASS_LISTS).append(_this.renderActivityList(data[i]));
               }
-              $(CLASS_LISTS).find('.mdl-spinner').remove();
             }
+            $(CLASS_LISTS).find('.mdl-spinner').remove();
+
           }
         });
       } else {
@@ -142,8 +149,9 @@
   QorActivity.CONTENT_HTML = (
     '<div class="mdl-layout mdl-js-layout qor-sliderout__activity-container">' +
       '<main class="mdl-layout__content qor-slideout--activity-content">' +
-        '<div class="mdl-layout__tab-panel is-active" id="scroll-tab-form">' +
-    '</div></main></div>'
+        '<div class="mdl-layout__tab-panel is-active" id="scroll-tab-form"></div>' +
+      '</main>' +
+    '</div>'
   );
 
   QorActivity.DEFAULTS = {};
@@ -175,7 +183,9 @@
   $.fn.qorSliderAfterShow.qorActivityinit = function (url) {
     var progressURL = url;
     $.ajax({
-      url: progressURL
+      url: progressURL,
+      method: 'GET',
+      dataType: 'html',
     }).done(function (html) {
       var $target = $('.qor-slideout > .qor-slideout__body');
       var $content = $(html);
@@ -187,6 +197,7 @@
 
       $('.qor-sliderout__activity-container').prepend($tab);
       $('.qor-slideout--activity-content').append($content.find('#scroll-tab-activity'));
+
     });
   };
 
