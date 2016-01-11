@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/jinzhu/gorm"
+	"github.com/qor/audited"
 	"github.com/qor/qor"
 	"github.com/qor/qor/admin"
-	"github.com/qor/qor/audited"
 )
 
 type QorActivity struct {
