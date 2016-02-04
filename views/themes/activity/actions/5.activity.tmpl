@@ -12,7 +12,7 @@
 <div class="mdl-layout__tab-panel" id="scroll-tab-activity" data-toggle="qor.activity">
   <div class="qor-activity__lists"><div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div></div>
   <div class="qor-activities__new">
-    <h4 class="qor-section-title">{{dt "activity.NewActivity" "Post a new activity"}}</h4>
+    <h4 class="qor-section-title">{{t "activity.NewActivity" "Post a new activity"}}</h4>
     <form class="qor-activity__new-note_form" action="/admin/{{$resource.ToParam}}/{{$result.ID}}/!{{activity_resource.ToParam}}" method="POST">
       {{render_form activity_resource.NewStruct (edit_sections activity_resource) }}
       <div class="qor-form__actions">
