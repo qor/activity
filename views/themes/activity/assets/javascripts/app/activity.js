@@ -30,7 +30,6 @@
     this.$element = $(element);
     this.options = $.extend({}, QorActivity.DEFAULTS, $.isPlainObject(options) && options);
     this.init();
-
   }
 
   QorActivity.prototype = {
@@ -180,25 +179,14 @@
   };
 
   // init activity html after sliderout loaded.
-  $.fn.qorSliderAfterShow.qorActivityinit = function (url) {
-    var progressURL = url;
-    $.ajax({
-      url: progressURL,
-      method: 'GET',
-      dataType: 'html',
-    }).done(function (html) {
-      var $target = $('.qor-slideout > .qor-slideout__body');
-      var $content = $(html);
-      var $tab = $content.find('.qor-tab-bar--activity-header');
-
-      QorActivity.ACTIVITY_LIST_TEMPLATE = $content.find(ID_LIST_TEMPLATE).html();
-
-      $target.wrapInner(QorActivity.CONTENT_HTML);
-
-      $('.qor-sliderout__activity-container').prepend($tab);
-      $('.qor-slideout--activity-content').append($content.find('#scroll-tab-activity'));
-
-    });
+  $.fn.qorSliderAfterShow.qorActivityinit = function (url, html) {
+    var $target = $('.qor-slideout > .qor-slideout__body');
+    var $tab = $('.qor-slideout .qor-tab-bar--activity-header');
+    QorActivity.ACTIVITY_LIST_TEMPLATE = $(ID_LIST_TEMPLATE).html();
+    $target.wrapInner(QorActivity.CONTENT_HTML);
+    $(".qor-slideout .qor-page__header").hide();
+    $('.qor-sliderout__activity-container').prepend($tab);
+    $('.qor-slideout--activity-content').append($('.qor-slideout #scroll-tab-activity'));
   };
 
   $(function () {
@@ -215,5 +203,4 @@
   });
 
   return QorActivity;
-
 });

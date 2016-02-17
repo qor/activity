@@ -1,1 +1,207 @@
-!function(t){"function"==typeof define&&define.amd?define(["jquery"],t):t("object"==typeof exports?require("jquery"):jQuery)}(function(t){"use strict";function i(e,o){this.$element=t(e),this.options=t.extend({},i.DEFAULTS,t.isPlainObject(o)&&o),this.init()}var e=(window.FormData,"qor.activity"),o="enable."+e,n="disable."+e,a="click."+e,r="submit."+e,s=".qor-activity__edit-button",d=".qor-tab__activity",c=".qor-activity__edit-note_form",l=".qor-activity__new-note_form",u="#template__qor-activity__list",v=".qor-activity__lists";return i.prototype={constructor:i,init:function(){this.$element;this.bind()},bind:function(){this.$element.on(a,t.proxy(this.click,this)).on(r,"form",t.proxy(this.submit,this)),t(document).on(a,d,t.proxy(this.tabClick,this))},submit:function(i){var e,o=(i.target,t(i.target)),n=this;return i.preventDefault(),e=o.serialize(),t.ajax(o.prop("action"),{method:o.prop("method"),data:e,dataType:"json"}).done(function(i){i.errors||(o.is(c)&&(n.hideEditForm(o),o.find(".qor-activity__list-note").html(i.Note)),o.is(l)&&(t(v).append(n.renderActivityList(i)),n.clearForm()))}),!1},renderActivityList:function(t){var e=i.ACTIVITY_LIST_TEMPLATE;return Mustache.parse(e),Mustache.render(e,t)},clearForm:function(){t('textarea[data-toggle="qor.redactor"]').redactor("code.set",""),t(l).find("textarea").val("")},click:function(i){var e=t(i.target);if(i.stopPropagation(),e.is(s)){var o=e.closest(".qor-activity__list");this.showEditForm(o)}},tabClick:function(i){var e=this,o=t(v).find(".qor-activity__list").size();if(!o){var n=t(d).data("actionId"),a="/admin/orders/"+n+"/!qor_activities";o?t(v).find(".mdl-spinner").remove():t.ajax({url:a,method:"GET",dataType:"json",success:function(i){if(i.length){t(v).html("");for(var o=i.length-1;o>=0;o--)t(v).append(e.renderActivityList(i[o]))}t(v).find(".mdl-spinner").remove()}})}},showEditForm:function(t){t.find(".qor-activity__list-note,.qor-activity__edit-button").removeClass("show").addClass("hide"),t.find(".qor-activity__edit-feilds,.qor-activity__edit-save-button").removeClass("hide").addClass("show")},hideEditForm:function(t){t.find(".qor-activity__list-note,.qor-activity__edit-button").removeClass("hide").addClass("show"),t.find(".qor-activity__edit-feilds,.qor-activity__edit-save-button").removeClass("show").addClass("hide")}},i.CONTENT_HTML='<div class="mdl-layout mdl-js-layout qor-sliderout__activity-container"><main class="mdl-layout__content qor-slideout--activity-content"><div class="mdl-layout__tab-panel is-active" id="scroll-tab-form"></div></main></div>',i.DEFAULTS={},i.ACTIVITY_LIST_TEMPLATE={},i.plugin=function(o){return this.each(function(){var n,a=t(this),r=a.data(e);if(!r){if(/destroy/.test(o))return;a.data(e,r=new i(this,o))}"string"==typeof o&&t.isFunction(n=r[o])&&n.apply(r)})},t.fn.qorSliderAfterShow.qorActivityinit=function(e){var o=e;t.ajax({url:o,method:"GET",dataType:"html"}).done(function(e){var o=t(".qor-slideout > .qor-slideout__body"),n=t(e),a=n.find(".qor-tab-bar--activity-header");i.ACTIVITY_LIST_TEMPLATE=n.find(u).html(),o.wrapInner(i.CONTENT_HTML),t(".qor-sliderout__activity-container").prepend(a),t(".qor-slideout--activity-content").append(n.find("#scroll-tab-activity"))})},t(function(){var e='[data-toggle="qor.activity"]';t(document).on(n,function(o){i.plugin.call(t(e,o.target),"destroy")}).on(o,function(o){i.plugin.call(t(e,o.target))}).triggerHandler(o)}),i});
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as anonymous module.
+    define(['jquery'], factory);
+  } else if (typeof exports === 'object') {
+    // Node / CommonJS
+    factory(require('jquery'));
+  } else {
+    // Browser globals.
+    factory(jQuery);
+  }
+})(function ($) {
+
+  'use strict';
+
+  var FormData = window.FormData;
+  var NAMESPACE = 'qor.activity';
+  var EVENT_ENABLE = 'enable.' + NAMESPACE;
+  var EVENT_DISABLE = 'disable.' + NAMESPACE;
+  var EVENT_CLICK = 'click.' + NAMESPACE;
+  var EVENT_SUBMIT = 'submit.' + NAMESPACE;
+  var CLASS_EDIT_NOTE = '.qor-activity__edit-button';
+  var CLASS_TAB_ACTIVITY = '.qor-tab__activity';
+  var CLASS_EDIT_NOTE_FORM = '.qor-activity__edit-note_form';
+  var CLASS_NEW_NOTE_FORM = '.qor-activity__new-note_form';
+  var ID_LIST_TEMPLATE = '#template__qor-activity__list';
+  var CLASS_LISTS = '.qor-activity__lists';
+
+  function QorActivity(element, options) {
+    this.$element = $(element);
+    this.options = $.extend({}, QorActivity.DEFAULTS, $.isPlainObject(options) && options);
+    this.init();
+  }
+
+  QorActivity.prototype = {
+    constructor: QorActivity,
+
+    init: function () {
+      var $this = this.$element;
+      this.bind();
+    },
+
+    bind: function () {
+      this.$element.
+      on(EVENT_CLICK, $.proxy(this.click, this)).
+      on(EVENT_SUBMIT, 'form', $.proxy(this.submit, this)),
+
+      $(document).on(EVENT_CLICK, CLASS_TAB_ACTIVITY, $.proxy(this.tabClick, this));
+    },
+
+    submit: function (e) {
+      var form = e.target;
+      var $form = $(e.target);
+      var FormDatas;
+      var _this = this;
+
+      e.preventDefault();
+
+      FormDatas = $form.serialize();
+      $.ajax($form.prop('action'), {
+        method: $form.prop('method'),
+        data: FormDatas,
+        dataType: 'json'
+      }).done(function (data) {
+        if (data.errors){
+          return;
+        }
+        if ($form.is(CLASS_EDIT_NOTE_FORM)){
+          _this.hideEditForm($form);
+          $form.find('.qor-activity__list-note').html(data.Note);
+        }
+
+        if ($form.is(CLASS_NEW_NOTE_FORM)){
+
+          $(CLASS_LISTS).append(_this.renderActivityList(data));
+          _this.clearForm();
+        }
+      });
+      return false;
+    },
+
+    renderActivityList: function (data) {
+      var activityListTemplate = QorActivity.ACTIVITY_LIST_TEMPLATE;
+      Mustache.parse(activityListTemplate);
+      return Mustache.render(activityListTemplate, data);
+    },
+
+    clearForm: function () {
+      $('textarea[data-toggle="qor.redactor"]').redactor('code.set', '');
+      $(CLASS_NEW_NOTE_FORM).find('textarea').val('');
+    },
+
+    click: function (e) {
+      var $target = $(e.target);
+      e.stopPropagation();
+
+      if ($target.is(CLASS_EDIT_NOTE)){
+        var parents = $target.closest('.qor-activity__list');
+        this.showEditForm(parents);
+      }
+
+    },
+
+    tabClick: function (e) {
+      var _this = this;
+      var activityList = $(CLASS_LISTS).find('.qor-activity__list').size();
+
+      if (activityList){
+        return;
+      }
+
+      var actionId = $(CLASS_TAB_ACTIVITY).data('actionId');
+      var url = '/admin/orders/' + actionId + '/!qor_activities';
+
+      if (!activityList){
+        $.ajax({
+          url: url,
+          method: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            if (data.length){
+              $(CLASS_LISTS).html('');
+              for (var i = data.length - 1; i >= 0; i--) {
+                $(CLASS_LISTS).append(_this.renderActivityList(data[i]));
+              }
+            }
+            $(CLASS_LISTS).find('.mdl-spinner').remove();
+
+          }
+        });
+      } else {
+        $(CLASS_LISTS).find('.mdl-spinner').remove();
+      }
+
+    },
+
+    showEditForm: function (ele) {
+      ele.find('.qor-activity__list-note,.qor-activity__edit-button').removeClass('show').addClass('hide');
+      ele.find('.qor-activity__edit-feilds,.qor-activity__edit-save-button').removeClass('hide').addClass('show');
+    },
+
+    hideEditForm: function (ele) {
+      ele.find('.qor-activity__list-note,.qor-activity__edit-button').removeClass('hide').addClass('show');
+      ele.find('.qor-activity__edit-feilds,.qor-activity__edit-save-button').removeClass('show').addClass('hide');
+    }
+  };
+
+  QorActivity.CONTENT_HTML = (
+    '<div class="mdl-layout mdl-js-layout qor-sliderout__activity-container">' +
+      '<main class="mdl-layout__content qor-slideout--activity-content">' +
+        '<div class="mdl-layout__tab-panel is-active" id="scroll-tab-form"></div>' +
+      '</main>' +
+    '</div>'
+  );
+
+  QorActivity.DEFAULTS = {};
+
+  QorActivity.ACTIVITY_LIST_TEMPLATE = {};
+
+  QorActivity.plugin = function (options) {
+    return this.each(function () {
+      var $this = $(this);
+      var data = $this.data(NAMESPACE);
+      var fn;
+
+      if (!data) {
+
+        if (/destroy/.test(options)) {
+          return;
+        }
+
+        $this.data(NAMESPACE, (data = new QorActivity(this, options)));
+      }
+
+      if (typeof options === 'string' && $.isFunction(fn = data[options])) {
+        fn.apply(data);
+      }
+    });
+  };
+
+  // init activity html after sliderout loaded.
+  $.fn.qorSliderAfterShow.qorActivityinit = function (url, html) {
+    var $target = $('.qor-slideout > .qor-slideout__body');
+    var $tab = $('.qor-slideout .qor-tab-bar--activity-header');
+    QorActivity.ACTIVITY_LIST_TEMPLATE = $(ID_LIST_TEMPLATE).html();
+    $target.wrapInner(QorActivity.CONTENT_HTML);
+    $(".qor-slideout .qor-page__header").hide();
+    $('.qor-sliderout__activity-container').prepend($tab);
+    $('.qor-slideout--activity-content').append($('.qor-slideout #scroll-tab-activity'));
+  };
+
+  $(function () {
+    var selector = '[data-toggle="qor.activity"]';
+
+    $(document).
+      on(EVENT_DISABLE, function (e) {
+        QorActivity.plugin.call($(selector, e.target), 'destroy');
+      }).
+      on(EVENT_ENABLE, function (e) {
+        QorActivity.plugin.call($(selector, e.target));
+      }).
+      triggerHandler(EVENT_ENABLE);
+  });
+
+  return QorActivity;
+
+});
