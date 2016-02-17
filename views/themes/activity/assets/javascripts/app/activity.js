@@ -38,6 +38,7 @@
     init: function () {
       var $this = this.$element;
       this.bind();
+      this.initTabs();
     },
 
     bind: function () {
@@ -131,7 +132,6 @@
       } else {
         $(CLASS_LISTS).find('.mdl-spinner').remove();
       }
-
     },
 
     showEditForm: function (ele) {
@@ -142,6 +142,23 @@
     hideEditForm: function (ele) {
       ele.find('.qor-activity__list-note,.qor-activity__edit-button').removeClass('hide').addClass('show');
       ele.find('.qor-activity__edit-feilds,.qor-activity__edit-save-button').removeClass('show').addClass('hide');
+    },
+
+    initTabs : function() {
+      if(!$('.qor-slideout.is-shown').get(0)) {
+        QorActivity.ACTIVITY_LIST_TEMPLATE = $(ID_LIST_TEMPLATE).html();
+        $('.qor-page__body').append(QorActivity.CONTENT_HTML);
+        $('.qor-form-container').appendTo($('#scroll-tab-form'));
+        $('#scroll-tab-activity').appendTo(".mdl-layout__content");
+        $('.qor-page__header .qor-tab-bar--activity-header').prependTo('.mdl-layout.qor-sliderout__activity-container');
+        $('.qor-page .qor-page__header').hide();
+        $('.qor-layout .mdl-layout__content.has-header').removeClass('has-header');
+        $('.qor-page').css('position', 'relative');
+        $('.qor-page__header + .qor-page__body').css('padding-top', '0');
+        $('.qor-page .mdl-layout__container').css('position', 'relative');
+        $('.qor-sliderout__activity-container').css('margin', '0');
+        $('#scroll-tab-activity').wrapInner('<div class="qor-form-container"></div>');
+      }
     }
   };
 
@@ -203,4 +220,5 @@
   });
 
   return QorActivity;
+
 });
