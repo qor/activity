@@ -4,8 +4,8 @@
 
   <header class="mdl-layout__header mdl-layout--fixed-tabs qor-tab-bar--activity-header">
     <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-      <a href="#scroll-tab-form" class="mdl-layout__tab is-active">Orders</a>
-      <a href="#scroll-tab-activity" class="mdl-layout__tab qor-tab__activity" data-action-id={{$result.ID}}>Activity</a>
+      <a href="#scroll-tab-form" class="mdl-layout__tab is-active">{{t (printf "%v.name" $resource.ToParam) $resource.Name}}</a>
+      <a href="#scroll-tab-activity" class="mdl-layout__tab qor-tab__activity" data-action-id={{$result.ID}}>{{t "qor_activity.form.tab_title" "Activity"}}</a>
     </div>
   </header>
 
