@@ -47,24 +47,18 @@
     img{
         max-width: 100%;
     }
-    .qor-activity__edit-button{
+    .qor-activity__edit-button, .qor-activity__edit-save-button{
         position: absolute;
-        bottom: 16px;
+        bottom: 12px;
         right: 16px;
+    }
+    .qor-activity__edit-save-button{
+      display: none;
     }
     .qor-activity__list-content{
         margin-top: 16px;
         font-size: 14px;
         margin-bottom: 14px;
-    }
-    .qor-activity__edit-save-button{
-        border: 0;
-        background: none;
-        display: none;
-        cursor: pointer;
-        position: absolute;
-        bottom: 16px;
-        right: 16px;
     }
     .qor-activity__edit-feilds{
         width: calc(100% - 77px);
