@@ -1,0 +1,58 @@
+{{if (or (eq .Action "edit") (eq .Action "show")) }}
+{{$resource := .Resource}}
+{{$result := .Result}}
+
+<header class="mdl-layout__header mdl-layout--fixed-tabs qor-tab-bar--activity-header">
+  <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+    <a href="#scroll-tab-form" class="mdl-layout__tab is-active">Orders</a>
+    <a href="#scroll-tab-activity" class="mdl-layout__tab qor-tab__activity" data-action-id={{$result.ID}}>Activity</a>
+  </div>
+</header>
+
+<div class="mdl-layout__tab-panel" id="scroll-tab-activity" data-toggle="qor.activity">
+  <div class="qor-activity__lists"><div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div></div>
+  <div class="qor-activities__new">
+    <h4 class="qor-section-title">{{t "qor_activity.form.new_activity" "New Activity"}}</h4>
+    <form class="qor-activity__new-note_form" action="/admin/{{$resource.ToParam}}/{{$result.ID}}/!{{activity_resource.ToParam}}" method="POST">
+      {{render_form activity_resource.NewStruct (edit_sections activity_resource) }}
+      <div class="qor-form__actions">
+        <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect qor-button--save" type="submit">{{t "qor_activity.form.add_activity" "Add Activity"}}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script id="template__qor-activity__list" type="x-tmpl-mustache">
+  <div class="qor-activity__list">
+    <form class="qor-activity__edit-note_form" action=[[ URL ]] method="POST">
+      <input type="hidden" name="QorResource.ID" value=[[ ID ]]>
+      <div class="qor-activity__list-title">
+        <strong>[[ CreatorName ]]</strong> <span>[[ Action ]]</span>
+      </div>
+      <div class="qor-activity__list-date">
+        [[ UpdatedAt ]]
+      </div>
+      <div class="qor-activity__list-content">[[ &Content ]]</div>
+      <div>
+        <strong>{{t "qor_activity.form.note" "Note:"}}</strong>
+        <span class="qor-activity__list-note">
+          [[ Note ]]
+        </span>
+
+        <a class="mdl-button mdl-js-button mdl-button--icon qor-activity__edit-button" href="#">
+          <i class="material-icons md-18 qor-activity__edit-button">edit</i>
+        </a>
+
+        <div class="mdl-textfield mdl-js-textfield qor-activity__edit-feilds">
+          <label class="mdl-textfield__label">[[ Note ]]</label>
+          <input class="mdl-textfield__input" type="text" name="QorResource.Note" value="[[ Note ]]">
+        </div>
+
+        <button class="qor-activity__edit-save-button" type="submit"><i class="material-icons md-24">save</i></button>
+      </div>
+    </form>
+  </div>
+</script>
+
+
+{{end}}

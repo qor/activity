@@ -4,40 +4,22 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/qor/qor"
 	"github.com/qor/qor/admin"
 )
 
-type Resource struct {
-	*admin.Resource
-	Record  interface{}
-	Context *qor.Context
-}
-
-func New(res *admin.Resource, record interface{}, context *qor.Context) *Resource {
-	return &Resource{Resource: res, Record: record, Context: context}
-}
-
-func (res Resource) getPrimaryKey() string {
-	db := res.Context.GetDB()
+func getPrimaryKey(context *admin.Context) string {
+	db := context.GetDB()
 
 	var primaryValues []string
-	for _, field := range db.NewScope(res.Record).PrimaryFields() {
+	for _, field := range db.NewScope(context.Result).PrimaryFields() {
 		primaryValues = append(primaryValues, fmt.Sprint(field.Field.Interface()))
 	}
 	return strings.Join(primaryValues, "::")
 }
 
-func (res Resource) CreateActivity(activity QorActivity) error {
-	db := res.Context.GetDB()
-	activity.ResourceType = res.ToParam()
-	activity.ResourceID = res.getPrimaryKey()
-	return db.Save(&activity).Error
-}
-
-func (res Resource) GetActivities(types ...string) ([]QorActivity, error) {
+func GetActivities(context *admin.Context, types ...string) ([]QorActivity, error) {
 	var activities []QorActivity
-	db := res.Context.GetDB().Where("resource_id = ? AND resource_type = ?", res.getPrimaryKey(), res.ToParam())
+	db := context.GetDB().Order("updated_at desc").Where("resource_id = ? AND resource_type = ?", context.Resource.GetPrimaryValue(context.Request), context.Resource.ToParam())
 
 	var inTypes, notInTypes []string
 	for _, t := range types {
