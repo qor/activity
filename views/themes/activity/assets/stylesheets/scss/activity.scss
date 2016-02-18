@@ -75,8 +75,8 @@
         }
     }
     .qor-activity__list-note {
-        padding-top: 3px;
-        padding-bottom: 4px;
+        padding-top: 2px;
+        padding-bottom: 3px;
         display: inline-block;
     }
     .show{
@@ -91,4 +91,16 @@
     .mdl-textfield__label:after {
         bottom: 0px;
     }
+}
+.qor-activities__new {
+  .qor-field__show {
+    display: none;
+  }
+
+  .qor-field__edit, .qor-fieldset__delete {
+    display: block;
+  }
+  .qor-fieldset__add{
+    display: inline-block;
+  }
 }
