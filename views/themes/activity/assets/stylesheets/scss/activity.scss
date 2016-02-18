@@ -92,15 +92,17 @@
         bottom: 0px;
     }
 }
+
 .qor-activities__new {
   .qor-field__show {
     display: none;
   }
 
-  .qor-field__edit, .qor-fieldset__delete {
+  .qor-field__edit {
     display: block;
   }
-  .qor-fieldset__add{
-    display: inline-block;
+
+  .qor-form__actions {
+    margin: 0 0 24px;
   }
 }

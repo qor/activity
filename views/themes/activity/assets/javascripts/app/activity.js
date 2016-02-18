@@ -73,7 +73,7 @@
 
         if ($form.is(CLASS_NEW_NOTE_FORM)){
 
-          $(CLASS_LISTS).append(_this.renderActivityList(data));
+          $(CLASS_LISTS).prepend(_this.renderActivityList(data));
           _this.clearForm();
         }
       });

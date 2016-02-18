@@ -19,7 +19,7 @@ func getPrimaryKey(context *admin.Context) string {
 
 func GetActivities(context *admin.Context, types ...string) ([]QorActivity, error) {
 	var activities []QorActivity
-	db := context.GetDB().Order("updated_at desc").Where("resource_id = ? AND resource_type = ?", context.Resource.GetPrimaryValue(context.Request), context.Resource.ToParam())
+	db := context.GetDB().Order("id asc").Where("resource_id = ? AND resource_type = ?", context.Resource.GetPrimaryValue(context.Request), context.Resource.ToParam())
 
 	var inTypes, notInTypes []string
 	for _, t := range types {
