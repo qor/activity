@@ -99,7 +99,6 @@
         var parents = $target.closest('.qor-activity__list');
         this.showEditForm(parents);
       }
-
     },
 
     tabClick: function (e) {
@@ -136,6 +135,7 @@
 
     showEditForm: function (ele) {
       ele.find('.qor-activity__list-note,.qor-activity__edit-button').removeClass('show').addClass('hide');
+      ele.find('.qor-activity__list-note').text().trim();
       ele.find('.qor-activity__edit-feilds,.qor-activity__edit-save-button').removeClass('hide').addClass('show');
     },
 
