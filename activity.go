@@ -55,6 +55,7 @@ func Register(res *admin.Resource) {
 		return fmt.Sprintf("/admin/%v/%v/!%v/%v/edit", res.ToParam(), res.GetPrimaryValue(ctx.Request), activityResource.ToParam(), value.(*QorActivity).ID)
 	}})
 	activityResource.Meta(&admin.Meta{Name: "Content", Type: "rich_editor", Resource: assetManager})
+	activityResource.Meta(&admin.Meta{Name: "Note", Type: "string", Resource: assetManager})
 	activityResource.EditAttrs("Action", "Content", "Note")
 	activityResource.ShowAttrs("ID", "Action", "Content", "Note", "URL", "UpdatedAt", "CreatorName")
 	activityResource.AddValidator(func(record interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
