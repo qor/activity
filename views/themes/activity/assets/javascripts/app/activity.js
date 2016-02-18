@@ -44,7 +44,7 @@
     bind: function () {
       this.$element.
       on(EVENT_CLICK, $.proxy(this.click, this)).
-      on(EVENT_SUBMIT, 'form', $.proxy(this.submit, this)),
+      on(EVENT_SUBMIT, 'form', $.proxy(this.submit, this));
 
       $(document).on(EVENT_CLICK, CLASS_TAB_ACTIVITY, $.proxy(this.tabClick, this));
     },
@@ -143,12 +143,12 @@
       ele.find('.qor-activity__edit-feilds,.qor-activity__edit-save-button').removeClass('show').addClass('hide');
     },
 
-    initTabs : function() {
-      if(!$('.qor-slideout.is-shown').get(0)) {
+    initTabs : function () {
+      if (!$('.qor-slideout.is-shown').get(0)) {
         QorActivity.ACTIVITY_LIST_TEMPLATE = $(ID_LIST_TEMPLATE).html();
         $('.qor-page__body').append(QorActivity.CONTENT_HTML);
         $('.qor-form-container').appendTo($('#scroll-tab-form'));
-        $('#scroll-tab-activity').appendTo(".mdl-layout__content");
+        $('#scroll-tab-activity').appendTo('.mdl-layout__content');
         $('.qor-page__header .qor-tab-bar--activity-header').prependTo('.mdl-layout.qor-sliderout__activity-container');
         $('.qor-page .qor-page__header').hide();
         $('.qor-layout .mdl-layout__content.has-header').removeClass('has-header');
@@ -200,7 +200,7 @@
     var $tab = $('.qor-slideout .qor-tab-bar--activity-header');
     QorActivity.ACTIVITY_LIST_TEMPLATE = $(ID_LIST_TEMPLATE).html();
     $target.wrapInner(QorActivity.CONTENT_HTML);
-    $(".qor-slideout .qor-page__header").hide();
+    $('.qor-slideout .qor-page__header').hide();
     $('.qor-sliderout__activity-container').prepend($tab);
     $('.qor-slideout--activity-content').append($('.qor-slideout #scroll-tab-activity'));
   };
