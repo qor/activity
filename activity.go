@@ -3,8 +3,6 @@ package activity
 import (
 	"fmt"
 	"html/template"
-	"os"
-	"path"
 	"strings"
 	"time"
 
@@ -31,9 +29,7 @@ type QorActivity struct {
 }
 
 func Register(res *admin.Resource) {
-	for _, gopath := range strings.Split(os.Getenv("GOPATH"), ":") {
-		admin.RegisterViewPath(path.Join(gopath, "src/github.com/qor/activity/views"))
-	}
+	admin.RegisterViewPath("github.com/qor/activity/views")
 
 	qorAdmin := res.GetAdmin()
 	assetManager := qorAdmin.GetResource("AssetManager")
