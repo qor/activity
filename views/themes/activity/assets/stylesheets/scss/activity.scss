@@ -100,3 +100,18 @@
     margin: 0 0 24px;
   }
 }
+
+.qor-page__edit,.qor-page__show{
+    .qor-page__header + &{
+        padding-top: 0;
+    }
+    .qor-sliderout__activity-container{
+        margin: 0;
+    }
+    .qor-tab-bar--activity-header .mdl-layout__tab-bar{
+        background-color: #0277bd;
+    }
+    .qor-form-container{
+        margin: 8px 0;
+    }
+}
