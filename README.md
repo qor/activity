@@ -1,11 +1,25 @@
-# Qor Activity Module
+# Activity
 
-Qor Activity Module provide feature set to be able to create and display a list of End user comments, states change, Administrator changes records for any Resource type like Order, Product, User etc. So that EC Operator can use it to track customer phone calls, customer emails etc.
+It's Qor Admin plugin, could be used to add Comment and Track data/state changes to any Qor Resource support to admin interface
 
-Also give a list of human action activities that EC Operator has done on the Resource that attached activity feature.
+[![GoDoc](https://godoc.org/github.com/qor/activity?status.svg)](https://godoc.org/github.com/qor/activity)
 
-## Developer Side Usage
+## Usage
 
+```go
+import "github.com/qor/service"
 
-## End User Side Usage
+func main() {
+  Admin := service.New(&qor.Config{DB: db})
+  order := Admin.AddResource(&models.Order{})
 
+  // Register Activity for Order resource
+  activity.Register(order)
+}
+```
+
+[Online Demo](http://demo.getqor.com/admin/orders)
+
+## License
+
+Released under the [MIT License](http://opensource.org/licenses/MIT).

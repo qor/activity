@@ -17,6 +17,7 @@ func getPrimaryKey(context *admin.Context) string {
 	return strings.Join(primaryValues, "::")
 }
 
+// GetActivities get activities for selected types
 func GetActivities(context *admin.Context, types ...string) ([]QorActivity, error) {
 	var activities []QorActivity
 	db := context.GetDB().Order("id asc").Where("resource_id = ? AND resource_type = ?", context.Resource.GetPrimaryValue(context.Request), context.Resource.ToParam())
