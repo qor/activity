@@ -128,3 +128,11 @@
         }
     }
 }
+
+@media screen and (max-width: 1024px){
+    .qor-theme-activity{
+        .qor-tab-bar--activity-header{
+            display: block;
+        }
+    }
+}
