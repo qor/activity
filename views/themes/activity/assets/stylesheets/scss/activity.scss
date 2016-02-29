@@ -1,6 +1,6 @@
 .qor-theme-activity{
     .mdl-layout__tab-bar{
-        height: 56px;
+        height: 48px;
         background-color: #0277bd;
     }
     .qor-slideout__body .mdl-layout__container{
@@ -23,18 +23,18 @@
         }
     }
     .qor-tab-bar--activity-header{
-        min-height: 56px;
-        height: 56px;
+        min-height: 48px;
+        height: 48px;
         background-color: #0277bd;
         .mdl-layout__tab-bar{
             background-color: #0277bd;
         }
         .mdl-layout__tab-bar-container{
-            height: 56px;
+            height: 48px;
         }
         .mdl-layout__tab{
-            height: 56px;
-            line-height: 56px;
+            height: 48px;
+            line-height: 48px;
         }
     }
     .qor-activity__list{
@@ -85,7 +85,7 @@
         .mdl-textfield {
           padding: 0;
         }
-        .mdl-textfield__label:after {
+        .mdl-textfield__label::after {
             bottom: 0;
         }
     }
@@ -125,6 +125,14 @@
     .qor-slideout__body{
         .qor-tab-bar--activity-header .mdl-layout__tab-bar{
             background-color: #03a9f4;
+        }
+    }
+}
+
+@media screen and (max-width: 1024px){
+    .qor-theme-activity{
+        .qor-tab-bar--activity-header{
+            display: block;
         }
     }
 }
