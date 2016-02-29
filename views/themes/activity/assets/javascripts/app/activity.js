@@ -150,12 +150,9 @@
         $('.qor-form-container').appendTo($('#scroll-tab-form'));
         $('#scroll-tab-activity').appendTo('.mdl-layout__content');
         $('.qor-page__header .qor-tab-bar--activity-header').prependTo('.mdl-layout.qor-sliderout__activity-container');
-        $('.qor-page .qor-page__header').hide();
+        $('.qor-page > .qor-page__header').hide();
+        $('.qor-page > .qor-page__header .qor-action-forms').prependTo('#scroll-tab-form');
         $('.qor-layout .mdl-layout__content.has-header').removeClass('has-header');
-        $('.qor-page').css('position', 'relative');
-        $('.qor-page__header + .qor-page__body').css('padding-top', '0');
-        $('.qor-page .mdl-layout__container').css('position', 'relative');
-        $('.qor-sliderout__activity-container').css('margin', '0');
         $('#scroll-tab-activity').wrapInner('<div class="qor-form-container"></div>');
       }
     }
@@ -200,7 +197,6 @@
     var $tab = $('.qor-slideout .qor-tab-bar--activity-header');
     QorActivity.ACTIVITY_LIST_TEMPLATE = $(ID_LIST_TEMPLATE).html();
     $target.wrapInner(QorActivity.CONTENT_HTML);
-    $('.qor-slideout .qor-page__header').hide();
     $('.qor-sliderout__activity-container').prepend($tab);
     $('.qor-slideout--activity-content').append($('.qor-slideout #scroll-tab-activity'));
   };
