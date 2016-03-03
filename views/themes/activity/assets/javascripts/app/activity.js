@@ -14,6 +14,7 @@
   'use strict';
 
   var FormData = window.FormData;
+  var Mustache = window.Mustache;
   var NAMESPACE = 'qor.activity';
   var EVENT_ENABLE = 'enable.' + NAMESPACE;
   var EVENT_DISABLE = 'disable.' + NAMESPACE;
@@ -53,7 +54,7 @@
       var form = e.target;
       var $form = $(e.target);
       var FormDatas;
-      var _this = this;
+      var self = this;
 
       e.preventDefault();
 
@@ -67,14 +68,14 @@
           return;
         }
         if ($form.is(CLASS_EDIT_NOTE_FORM)){
-          _this.hideEditForm($form);
+          self.hideEditForm($form);
           $form.find('.qor-activity__list-note').html(data.Note);
         }
 
         if ($form.is(CLASS_NEW_NOTE_FORM)){
 
-          $(CLASS_LISTS).prepend(_this.renderActivityList(data));
-          _this.clearForm();
+          $(CLASS_LISTS).prepend(self.renderActivityList(data));
+          self.clearForm();
         }
       });
       return false;
@@ -102,7 +103,7 @@
     },
 
     tabClick: function (e) {
-      var _this = this;
+      var self = this;
       var activityList = $(CLASS_LISTS).find('.qor-activity__list').size();
 
       if (activityList){
@@ -121,7 +122,7 @@
             if (data.length){
               $(CLASS_LISTS).html('');
               for (var i = data.length - 1; i >= 0; i--) {
-                $(CLASS_LISTS).append(_this.renderActivityList(data[i]));
+                $(CLASS_LISTS).prepend(self.renderActivityList(data[i]));
               }
             }
             $(CLASS_LISTS).find('.mdl-spinner').remove();
