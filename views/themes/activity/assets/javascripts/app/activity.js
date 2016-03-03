@@ -55,6 +55,7 @@
       var $form = $(e.target);
       var FormDatas;
       var self = this;
+      var NoteTitle = $('#scroll-tab-activity').data().noteTitle;
 
       e.preventDefault();
 
@@ -67,6 +68,8 @@
         if (data.errors){
           return;
         }
+        data.NoteTitle = NoteTitle;
+
         if ($form.is(CLASS_EDIT_NOTE_FORM)){
           self.hideEditForm($form);
           $form.find('.qor-activity__list-note').html(data.Note);
@@ -82,9 +85,7 @@
     },
 
     renderActivityList: function (data) {
-      var activityListTemplate = QorActivity.ACTIVITY_LIST_TEMPLATE;
-      Mustache.parse(activityListTemplate);
-      return Mustache.render(activityListTemplate, data);
+      return Mustache.render(QorActivity.ACTIVITY_LIST_TEMPLATE, data);
     },
 
     clearForm: function () {
@@ -105,6 +106,7 @@
     tabClick: function (e) {
       var self = this;
       var activityList = $(CLASS_LISTS).find('.qor-activity__list').size();
+      var NoteTitle = $('#scroll-tab-activity').data().noteTitle;
 
       if (activityList){
         return;
@@ -122,7 +124,8 @@
             if (data.length){
               $(CLASS_LISTS).html('');
               for (var i = data.length - 1; i >= 0; i--) {
-                $(CLASS_LISTS).prepend(self.renderActivityList(data[i]));
+                data[i].NoteTitle = NoteTitle;
+                $(CLASS_LISTS).append(self.renderActivityList(data[i]));
               }
             }
             $(CLASS_LISTS).find('.mdl-spinner').remove();
@@ -146,7 +149,6 @@
 
     initTabs : function () {
       if (!$('.qor-slideout.is-shown').get(0)) {
-        QorActivity.ACTIVITY_LIST_TEMPLATE = $(ID_LIST_TEMPLATE).html();
         $('.qor-page__body').append(QorActivity.CONTENT_HTML);
         $('.qor-form-container').appendTo($('#scroll-tab-form'));
         $('#scroll-tab-activity').appendTo('.mdl-layout__content');
@@ -169,7 +171,34 @@
 
   QorActivity.DEFAULTS = {};
 
-  QorActivity.ACTIVITY_LIST_TEMPLATE = {};
+  QorActivity.ACTIVITY_LIST_TEMPLATE = (
+    '<div class="qor-activity__list">' +
+      '<form class="qor-activity__edit-note_form" action=[[ URL ]] method="POST">' +
+        '<input type="hidden" name="QorResource.ID" value=[[ ID ]]>' +
+        '<div class="qor-activity__list-title">' +
+          '<strong>[[ CreatorName ]]</strong> <span>[[ Action ]]</span>' +
+        '</div>' +
+        '<div class="qor-activity__list-date">' +
+          '[[ UpdatedAt ]]' +
+        '</div>' +
+        '<div class="qor-activity__list-content">[[ &Content ]]</div>' +
+        '<div>' +
+          '<strong>[[ NoteTitle ]]</strong>' +
+          '<span class="qor-activity__list-note">' +
+            '[[ Note ]]' +
+          '</span>' +
+          '<a class="mdl-button mdl-js-button mdl-button--icon qor-activity__edit-button" href="#">' +
+            '<i class="material-icons md-18 qor-activity__edit-button">edit</i>' +
+          '</a>' +
+          '<div class="mdl-textfield mdl-js-textfield qor-activity__edit-feilds">' +
+            '<label class="mdl-textfield__label">[[ Note ]]</label>' +
+            '<input class="mdl-textfield__input" type="text" name="QorResource.Note" value="[[ Note ]]">' +
+          '</div>' +
+          '<button class="mdl-button mdl-js-button mdl-button--icon qor-activity__edit-save-button" type="submit"><i class="material-icons md-24">done</i></button>' +
+        '</div>' +
+      '</form>' +
+    '</div>'
+  );
 
   QorActivity.plugin = function (options) {
     return this.each(function () {
@@ -196,7 +225,6 @@
   $.fn.qorSliderAfterShow.qorActivityinit = function (url, html) {
     var $target = $('.qor-slideout > .qor-slideout__body');
     var $tab = $('.qor-slideout .qor-tab-bar--activity-header');
-    QorActivity.ACTIVITY_LIST_TEMPLATE = $(ID_LIST_TEMPLATE).html();
     $target.wrapInner(QorActivity.CONTENT_HTML);
     $('.qor-sliderout__activity-container').prepend($tab);
     $('.qor-slideout--activity-content').append($('.qor-slideout #scroll-tab-activity'));
