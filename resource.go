@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/qor/qor/admin"
+	"github.com/qor/admin"
 )
 
 func getPrimaryKey(context *admin.Context) string {
