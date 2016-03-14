@@ -1,6 +1,8 @@
 # Activity
 
-It's Qor Admin plugin, could be used to add Comment and Track data/state changes to any Qor Resource support to admin interface
+Activity is dependant on [QOR Admin](https://github.com/qor/admin). It provides QOR Admin with an activity tracking feature for any Resource.
+
+Applying Activity to a Resource will add `Comment` and `Track` data/state changes within the admin interface.
 
 [![GoDoc](https://godoc.org/github.com/qor/activity?status.svg)](https://godoc.org/github.com/qor/activity)
 
