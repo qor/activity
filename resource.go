@@ -42,3 +42,22 @@ func GetActivities(context *admin.Context, types ...string) ([]QorActivity, erro
 	err := db.Find(&activities).Error
 	return activities, err
 }
+
+// CreateActivity creates an activity for this context
+func Create(context *admin.Context, activity *QorActivity) error {
+	var activityResource = context.Admin.GetResource("QorActivity")
+
+	result, err := context.FindOne()
+	if err != nil {
+		return err
+	}
+
+	context.Result = result
+
+	// fill in necessary activity fields
+	activity.ResourceType = context.Resource.ToParam()
+	activity.ResourceID = getPrimaryKey(context)
+	activity.CreatorName = context.CurrentUser.DisplayName()
+
+	return activityResource.CallSave(activity, context.Context)
+}
