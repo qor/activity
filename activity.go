@@ -20,8 +20,8 @@ import (
 type QorActivity struct {
 	gorm.Model
 	Action       string
-	Content      string `sql:"size:5000"`
-	Note         string `sql:"size:2000"`
+	Content      string `gorm:"type:text"`
+	Note         string `gorm:"type:text"`
 	Type         string
 	ResourceType string
 	ResourceID   string
