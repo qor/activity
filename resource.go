@@ -7,11 +7,11 @@ import (
 	"github.com/qor/admin"
 )
 
-func getPrimaryKey(context *admin.Context) string {
+func getPrimaryKey(context *admin.Context, record interface{}) string {
 	db := context.GetDB()
 
 	var primaryValues []string
-	for _, field := range db.NewScope(context.Result).PrimaryFields() {
+	for _, field := range db.NewScope(record).PrimaryFields() {
 		primaryValues = append(primaryValues, fmt.Sprint(field.Field.Interface()))
 	}
 	return strings.Join(primaryValues, "::")
@@ -44,19 +44,12 @@ func GetActivities(context *admin.Context, types ...string) ([]QorActivity, erro
 }
 
 // CreateActivity creates an activity for this context
-func Create(context *admin.Context, activity *QorActivity) error {
+func CreateActivity(context *admin.Context, activity *QorActivity, result interface{}) error {
 	var activityResource = context.Admin.GetResource("QorActivity")
-
-	result, err := context.FindOne()
-	if err != nil {
-		return err
-	}
-
-	context.Result = result
 
 	// fill in necessary activity fields
 	activity.ResourceType = context.Resource.ToParam()
-	activity.ResourceID = getPrimaryKey(context)
+	activity.ResourceID = getPrimaryKey(context, result)
 	activity.CreatorName = context.CurrentUser.DisplayName()
 
 	return activityResource.CallSave(activity, context.Context)

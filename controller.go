@@ -32,12 +32,8 @@ func (ctrl controller) CreateActivityHandler(context *admin.Context) {
 	activityResource := ctrl.ActivityResource
 	newActivity := &QorActivity{}
 	if err == nil {
-		context.Result = result
 		if context.AddError(activityResource.Decode(context.Context, newActivity)); !context.HasError() {
-			newActivity.ResourceType = context.Resource.ToParam()
-			newActivity.ResourceID = getPrimaryKey(context)
-			newActivity.CreatorName = context.CurrentUser.DisplayName()
-			context.AddError(activityResource.CallSave(newActivity, context.Context))
+			context.AddError(CreateActivity(context, newActivity, result))
 		}
 	}
 	context.AddError(err)
