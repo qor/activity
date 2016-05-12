@@ -74,7 +74,7 @@ func Register(res *admin.Resource) {
 		})
 	}
 
-	admin.RegisterViewPath("github.com/qor/activity/views")
+	res.GetAdmin().RegisterViewPath("github.com/qor/activity/views")
 	res.UseTheme("activity")
 
 	qorAdmin.RegisterFuncMap("get_activities", func(context *admin.Context, types ...string) []QorActivity {
