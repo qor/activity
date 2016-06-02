@@ -9,10 +9,10 @@ Applying Activity to a Resource will add `Comment` and `Track` data/state change
 ## Usage
 
 ```go
-import "github.com/qor/service"
+import "github.com/qor/admin"
 
 func main() {
-  Admin := service.New(&qor.Config{DB: db})
+  Admin := admin.New(&qor.Config{DB: db})
   order := Admin.AddResource(&models.Order{})
 
   // Register Activity for Order resource
