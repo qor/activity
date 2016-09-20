@@ -107,6 +107,9 @@
     .qor-page__header{
         & + .qor-page__edit, & + .qor-page__show{
             padding-top: 0;
+            .mdl-layout__container{
+                margin-top: -8px;
+            }
         }
     }
 
