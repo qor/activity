@@ -2,9 +2,7 @@ package activity
 
 import (
 	"fmt"
-	"html/template"
 	"strings"
-	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/qor/admin"
@@ -49,7 +47,7 @@ func Register(res *admin.Resource) {
 			return activityResource.GetAdmin().T(ctx, "activity."+act.Action, act.Action)
 		}})
 		activityResource.Meta(&admin.Meta{Name: "UpdatedAt", Type: "hidden", Valuer: func(value interface{}, ctx *qor.Context) interface{} {
-			return value.(*QorActivity).UpdatedAt.Format("Jan 2 15:04")
+			return utils.FormatTime(value.(*QorActivity).UpdatedAt, "Jan 2 15:04", ctx)
 		}})
 		activityResource.Meta(&admin.Meta{Name: "URL", Valuer: func(value interface{}, ctx *qor.Context) interface{} {
 			return fmt.Sprintf("/admin/%v/%v/!%v/%v/edit", res.ToParam(), res.GetPrimaryValue(ctx.Request), activityResource.ToParam(), value.(*QorActivity).ID)
@@ -76,19 +74,6 @@ func Register(res *admin.Resource) {
 
 	res.GetAdmin().RegisterViewPath("github.com/qor/activity/views")
 	res.UseTheme("activity")
-
-	qorAdmin.RegisterFuncMap("get_activities", func(context *admin.Context, types ...string) []QorActivity {
-		activities, _ := GetActivities(context, types...)
-		return activities
-	})
-
-	qorAdmin.RegisterFuncMap("formatted_datetime", func(datetime time.Time) string {
-		return datetime.Format("Jan 2 15:04")
-	})
-
-	qorAdmin.RegisterFuncMap("formatted_content", func(content string) template.HTML {
-		return template.HTML(content)
-	})
 
 	qorAdmin.RegisterFuncMap("activity_resource", func() *admin.Resource {
 		return qorAdmin.GetResource("QorActivity")
