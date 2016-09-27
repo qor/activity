@@ -11,7 +11,7 @@ type controller struct {
 	ActivityResource *admin.Resource
 }
 
-func (ctrl controller) GetActivityHandler(context *admin.Context) {
+func (ctrl controller) GetActivity(context *admin.Context) {
 	activities, _ := GetActivities(context, "-tag")
 	activityResource := ctrl.ActivityResource
 
@@ -27,7 +27,7 @@ func (ctrl controller) GetActivityHandler(context *admin.Context) {
 	}
 }
 
-func (ctrl controller) CreateActivityHandler(context *admin.Context) {
+func (ctrl controller) CreateActivity(context *admin.Context) {
 	result, err := context.FindOne()
 	activityResource := ctrl.ActivityResource
 	newActivity := &QorActivity{}
@@ -57,7 +57,7 @@ func (ctrl controller) CreateActivityHandler(context *admin.Context) {
 	}
 }
 
-func (ctrl controller) UpdateActivityHandler(context *admin.Context) {
+func (ctrl controller) UpdateActivity(context *admin.Context) {
 	c := context.Admin.NewContext(context.Writer, context.Request)
 	c.ResourceID = ctrl.ActivityResource.GetPrimaryValue(context.Request)
 	c.Resource = ctrl.ActivityResource

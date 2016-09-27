@@ -79,9 +79,13 @@ func Register(res *admin.Resource) {
 		return qorAdmin.GetResource("QorActivity")
 	})
 
+	qorAdmin.RegisterFuncMap("get_activities_count", func(context *admin.Context) int {
+		return GetActivitiesCount(context)
+	})
+
 	router := res.GetAdmin().GetRouter()
 	ctrl := controller{ActivityResource: activityResource}
-	router.Get(fmt.Sprintf("/%v/%v/!qor_activities", res.ToParam(), res.ParamIDName()), ctrl.GetActivityHandler)
-	router.Post(fmt.Sprintf("/%v/%v/!qor_activities", res.ToParam(), res.ParamIDName()), ctrl.CreateActivityHandler)
-	router.Post(fmt.Sprintf("/%v/%v/!qor_activities/%v/edit", res.ToParam(), res.ParamIDName(), activityResource.ParamIDName()), ctrl.UpdateActivityHandler)
+	router.Get(fmt.Sprintf("/%v/%v/!qor_activities", res.ToParam(), res.ParamIDName()), ctrl.GetActivity)
+	router.Post(fmt.Sprintf("/%v/%v/!qor_activities", res.ToParam(), res.ParamIDName()), ctrl.CreateActivity)
+	router.Post(fmt.Sprintf("/%v/%v/!qor_activities/%v/edit", res.ToParam(), res.ParamIDName(), activityResource.ParamIDName()), ctrl.UpdateActivity)
 }
