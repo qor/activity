@@ -1,5 +1,9 @@
 # Activity
 
+## Documentation
+
+<https://doc.getqor.com/plugins/activity.html>
+
 Activity is dependant on [QOR Admin](https://github.com/qor/admin). It provides QOR Admin with an activity tracking feature for any Resource.
 
 Applying Activity to a Resource will add `Comment` and `Track` data/state changes within the admin interface.
