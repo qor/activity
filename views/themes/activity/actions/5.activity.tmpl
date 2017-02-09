@@ -18,7 +18,7 @@
   <div class="mdl-layout__tab-panel" id="scroll-tab-activity" data-note-title="{{t "qor_activity.form.note" "Note:"}}" data-toggle="qor.activity">
     <div class="qor-activities__new">
       <h4 class="qor-section-title">{{t "qor_activity.form.new_activity" "New Activity"}}</h4>
-      <form class="qor-activity__new-note_form" action="{{join_url (url_for $result $resource) activity_resource.ToParam}}" method="POST">
+      <form class="qor-activity__new-note_form" action="{{activity_join_url (url_for $result $resource) activity_resource.ToParam}}" method="POST">
         {{render_form activity_resource.NewStruct (edit_sections activity_resource) }}
         <div class="qor-form__actions">
           <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect qor-button--save" type="submit">{{t "qor_activity.form.add_activity" "Add Activity"}}</button>

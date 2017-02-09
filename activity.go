@@ -83,6 +83,8 @@ func Register(res *admin.Resource) {
 		return GetActivitiesCount(context)
 	})
 
+	registerFuncMap(res.GetAdmin())
+
 	router := res.GetAdmin().GetRouter()
 	ctrl := controller{ActivityResource: activityResource}
 	router.Get(fmt.Sprintf("/%v/%v/!qor_activities", res.ToParam(), res.ParamIDName()), ctrl.GetActivity)
