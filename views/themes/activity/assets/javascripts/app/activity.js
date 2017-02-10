@@ -112,8 +112,7 @@
         return;
       }
 
-      var actionId = $(CLASS_TAB_ACTIVITY).data('actionId');
-      var url = '/admin/orders/' + actionId + '/!qor_activities';
+      var url = $(CLASS_TAB_ACTIVITY).data('resource-url');
 
       if (!activityList){
         $.ajax({

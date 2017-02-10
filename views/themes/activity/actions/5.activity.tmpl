@@ -1,11 +1,12 @@
 {{if (or (eq .Action "edit") (eq .Action "show")) }}
   {{$resource := .Resource}}
   {{$result := .Result}}
+  {{$action := print "!" activity_resource.ToParam }}
 
   <header class="mdl-layout__header mdl-layout--fixed-tabs qor-tab-bar--activity-header">
     <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
       <a href="#scroll-tab-form" class="mdl-layout__tab is-active">{{t (printf "%v.name" $resource.ToParam) $resource.Name}}</a>
-      <a href="#scroll-tab-activity" class="mdl-layout__tab qor-tab__activity" data-action-id={{$result.ID}}>
+      <a href="#scroll-tab-activity" class="mdl-layout__tab qor-tab__activity" data-resource-url={{join_url (url_for $result $resource) $action}}>
         {{t "qor_activity.form.tab_title" "Activity"}}
         {{$activities_count := get_activities_count .}}
         {{if $activities_count}}
@@ -18,7 +19,7 @@
   <div class="mdl-layout__tab-panel" id="scroll-tab-activity" data-note-title="{{t "qor_activity.form.note" "Note:"}}" data-toggle="qor.activity">
     <div class="qor-activities__new">
       <h4 class="qor-section-title">{{t "qor_activity.form.new_activity" "New Activity"}}</h4>
-      <form class="qor-activity__new-note_form" action="{{join_url (url_for $result $resource) activity_resource.ToParam}}" method="POST">
+      <form class="qor-activity__new-note_form" action="{{join_url (url_for $result $resource) $action}}" method="POST">
         {{render_form activity_resource.NewStruct (edit_sections activity_resource) }}
         <div class="qor-form__actions">
           <button class="mdl-button mdl-button--colored mdl-button--raised mdl-js-button mdl-js-ripple-effect qor-button--save" type="submit">{{t "qor_activity.form.add_activity" "Add Activity"}}</button>
