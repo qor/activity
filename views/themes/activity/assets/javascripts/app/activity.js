@@ -63,7 +63,10 @@
       $.ajax($form.prop('action'), {
         method: $form.prop('method'),
         data: FormDatas,
-        dataType: 'json'
+        dataType: 'json',
+        headers: {
+          Accept: "application/json; charset=utf-8",
+        }
       }).done(function (data) {
         if (data.errors){
           return;
@@ -119,6 +122,9 @@
           url: url,
           method: 'GET',
           dataType: 'json',
+          headers: {
+            Accept: "application/json; charset=utf-8",
+          }
           success: function (data) {
             if (data.length){
               $(CLASS_LISTS).html('');
