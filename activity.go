@@ -7,7 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/qor/admin"
 	"github.com/qor/audited"
-	"github.com/qor/media_library"
+	"github.com/qor/media/asset_manager"
 	"github.com/qor/qor"
 	"github.com/qor/qor/resource"
 	"github.com/qor/qor/utils"
@@ -55,7 +55,7 @@ func Register(res *admin.Resource) {
 
 		assetManager := qorAdmin.GetResource("AssetManager")
 		if assetManager == nil {
-			assetManager = qorAdmin.AddResource(&media_library.AssetManager{}, &admin.Config{Invisible: true})
+			assetManager = qorAdmin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
 		}
 
 		activityResource.Meta(&admin.Meta{Name: "Content", Type: "rich_editor", Resource: assetManager})
