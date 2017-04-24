@@ -39,12 +39,6 @@ type Product struct {
 
 func init() {
 	db = utils.TestDB()
-	if err := db.DropTableIfExists(&QorActivity{}, &Order{}, &Product{}).Error; err != nil {
-		panic(err)
-	}
-	db.AutoMigrate(&QorActivity{}, &Order{}, &Product{})
-	db.Create(&Order{Code: "1000001"})
-	db.Create(&Product{Code: "1000001", Locale: l10n.Locale{LanguageCode: "Global"}})
 	Admin = admin.New(&qor.Config{DB: db})
 	orderRes := Admin.AddResource(&Order{})
 	orderRes.Permission = roles.Allow(roles.CRUD, roles.Anyone)
@@ -57,7 +51,17 @@ func init() {
 	l10n.RegisterCallbacks(db)
 }
 
+func setup() {
+	if err := db.DropTableIfExists(&QorActivity{}, &Order{}, &Product{}).Error; err != nil {
+		panic(err)
+	}
+	db.AutoMigrate(&QorActivity{}, &Order{}, &Product{})
+	db.Create(&Order{Code: "1000001"})
+	db.Create(&Product{Code: "1000001", Locale: l10n.Locale{LanguageCode: "Global"}})
+}
+
 func TestActivityWithNotLocalization(t *testing.T) {
+	setup()
 	http.PostForm(Server.URL+"/admin/orders/1/!qor_activities", url.Values{
 		"QorResource.Action":  {"comment on"},
 		"QorResource.Content": {"Activity Title"},
@@ -89,6 +93,7 @@ func TestActivityWithNotLocalization(t *testing.T) {
 }
 
 func TestActivityWithLocalization(t *testing.T) {
+	setup()
 	http.PostForm(Server.URL+"/admin/products/1/!qor_activities", url.Values{
 		"QorResource.Action":  {"comment on"},
 		"QorResource.Content": {"Activity Title"},
@@ -104,8 +109,8 @@ func TestActivityWithLocalization(t *testing.T) {
 		ResourceType: "products",
 	})
 
-	http.PostForm(Server.URL+"/admin/products/1/!qor_activities/2/edit", url.Values{
-		"QorResource.ID":   {"2"},
+	http.PostForm(Server.URL+"/admin/products/1/!qor_activities/1/edit", url.Values{
+		"QorResource.ID":   {"1"},
 		"QorResource.Note": {"Activity Note Changed"},
 	})
 
