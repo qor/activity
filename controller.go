@@ -17,12 +17,12 @@ func (ctrl controller) GetActivity(context *admin.Context) {
 
 	if context.HasError() {
 		responder.With("json", func() {
-			context.JSON("edit", map[string]interface{}{"errors": context.GetErrors()})
+			context.Encode("edit", map[string]interface{}{"errors": context.GetErrors()})
 		}).Respond(context.Request)
 	} else {
 		responder.With("json", func() {
 			context.Resource = activityResource
-			context.JSON("index", activities)
+			context.Encode("index", activities)
 		}).Respond(context.Request)
 	}
 }
