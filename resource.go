@@ -6,7 +6,6 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/qor/admin"
-	"github.com/qor/qor/utils"
 )
 
 func prepareGetActivitiesDB(context *admin.Context, result interface{}, types ...string) *gorm.DB {
@@ -34,25 +33,16 @@ func prepareGetActivitiesDB(context *admin.Context, result interface{}, types ..
 }
 
 // GetActivities get activities for selected types
-func GetActivities(context *admin.Context, types ...string) ([]QorActivity, error) {
+func GetActivities(context *admin.Context, result interface{}, types ...string) ([]QorActivity, error) {
 	var activities []QorActivity
-	result, err := context.FindOne()
-	if err != nil {
-		return nil, err
-	}
 	db := prepareGetActivitiesDB(context, result, types...)
-	err = db.Find(&activities).Error
+	err := db.Find(&activities).Error
 	return activities, err
 }
 
 // GetActivitiesCount get activities's count for selected types
-func GetActivitiesCount(context *admin.Context, types ...string) int {
+func GetActivitiesCount(context *admin.Context, result interface{}, types ...string) int {
 	var count int
-	result, err := context.FindOne()
-	if err != nil {
-		utils.ExitWithMsg("Activity: findOne got %v", err)
-		return 0
-	}
 	prepareGetActivitiesDB(context, result, types...).Model(&QorActivity{}).Count(&count)
 	return count
 }

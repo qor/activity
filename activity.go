@@ -80,7 +80,7 @@ func Register(res *admin.Resource) {
 	})
 
 	qorAdmin.RegisterFuncMap("get_activities_count", func(context *admin.Context) int {
-		return GetActivitiesCount(context)
+		return GetActivitiesCount(context, context.Result)
 	})
 
 	router := res.GetAdmin().GetRouter()

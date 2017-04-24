@@ -12,8 +12,17 @@ type controller struct {
 }
 
 func (ctrl controller) GetActivity(context *admin.Context) {
-	activities, _ := GetActivities(context, "-tag")
-	activityResource := ctrl.ActivityResource
+	var (
+		activities       []QorActivity
+		activityResource = ctrl.ActivityResource
+		result, err      = context.FindOne()
+	)
+
+	if err == nil {
+		activities, err = GetActivities(context, result, "-tag")
+	}
+
+	context.AddError(err)
 
 	if context.HasError() {
 		responder.With("json", func() {
@@ -21,21 +30,24 @@ func (ctrl controller) GetActivity(context *admin.Context) {
 		}).Respond(context.Request)
 	} else {
 		responder.With("json", func() {
-			context.Resource = activityResource
-			context.Encode("index", activities)
+			context.NewResourceContext(activityResource).Encode("index", activities)
 		}).Respond(context.Request)
 	}
 }
 
 func (ctrl controller) CreateActivity(context *admin.Context) {
-	result, err := context.FindOne()
-	activityResource := ctrl.ActivityResource
-	newActivity := &QorActivity{}
+	var (
+		activityResource = ctrl.ActivityResource
+		newActivity      = &QorActivity{}
+		result, err      = context.FindOne()
+	)
+
 	if err == nil {
 		if context.AddError(activityResource.Decode(context.Context, newActivity)); !context.HasError() {
 			context.AddError(CreateActivity(context, newActivity, result))
 		}
 	}
+
 	context.AddError(err)
 
 	redirectTo := context.Request.Referer()
@@ -44,15 +56,14 @@ func (ctrl controller) CreateActivity(context *admin.Context) {
 			context.Flash(context.Error(), "error")
 			http.Redirect(context.Writer, context.Request, redirectTo, http.StatusFound)
 		}).With("json", func() {
-			context.JSON("edit", map[string]interface{}{"errors": context.GetErrors()})
+			context.Encode("edit", map[string]interface{}{"errors": context.GetErrors()})
 		}).Respond(context.Request)
 	} else {
 		responder.With("html", func() {
 			context.Flash(string(context.Admin.T(context.Context, "activity.successfully_created", "Activity was successfully created")), "success")
 			http.Redirect(context.Writer, context.Request, redirectTo, http.StatusFound)
 		}).With("json", func() {
-			context.Resource = activityResource
-			context.JSON("show", newActivity)
+			context.NewResourceContext(activityResource).Encode("show", newActivity)
 		}).Respond(context.Request)
 	}
 }
@@ -77,14 +88,14 @@ func (ctrl controller) UpdateActivity(context *admin.Context) {
 		responder.With("html", func() {
 			http.Redirect(context.Writer, context.Request, redirectTo, http.StatusFound)
 		}).With("json", func() {
-			context.JSON("edit", map[string]interface{}{"errors": context.GetErrors()})
+			context.Encode("edit", map[string]interface{}{"errors": context.GetErrors()})
 		}).Respond(context.Request)
 	} else {
 		responder.With("html", func() {
 			context.Flash(string(context.Admin.T(context.Context, "activity.successfully_updated", "Activity was successfully updated")), "success")
 			http.Redirect(context.Writer, context.Request, redirectTo, http.StatusFound)
 		}).With("json", func() {
-			c.JSON("show", result)
+			c.Encode("show", result)
 		}).Respond(context.Request)
 	}
 }
