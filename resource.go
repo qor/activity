@@ -6,10 +6,12 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/qor/admin"
+	"github.com/qor/qor/utils"
 )
 
-func prepareGetActivitiesDB(context *admin.Context, types ...string) *gorm.DB {
-	db := context.GetDB().Order("id asc").Where("resource_id = ? AND resource_type = ?", context.Resource.GetPrimaryValue(context.Request), context.Resource.ToParam())
+func prepareGetActivitiesDB(context *admin.Context, result interface{}, types ...string) *gorm.DB {
+	resourceID := getPrimaryKey(context, result)
+	db := context.GetDB().Order("id asc").Where("resource_id = ? AND resource_type = ?", resourceID, context.Resource.ToParam())
 
 	var inTypes, notInTypes []string
 	for _, t := range types {
@@ -34,15 +36,24 @@ func prepareGetActivitiesDB(context *admin.Context, types ...string) *gorm.DB {
 // GetActivities get activities for selected types
 func GetActivities(context *admin.Context, types ...string) ([]QorActivity, error) {
 	var activities []QorActivity
-	db := prepareGetActivitiesDB(context, types...)
-	err := db.Find(&activities).Error
+	result, err := context.FindOne()
+	if err != nil {
+		return nil, err
+	}
+	db := prepareGetActivitiesDB(context, result, types...)
+	err = db.Find(&activities).Error
 	return activities, err
 }
 
 // GetActivitiesCount get activities's count for selected types
 func GetActivitiesCount(context *admin.Context, types ...string) int {
 	var count int
-	prepareGetActivitiesDB(context, types...).Model(&QorActivity{}).Count(&count)
+	result, err := context.FindOne()
+	if err != nil {
+		utils.ExitWithMsg("Activity: findOne got %v", err)
+		return 0
+	}
+	prepareGetActivitiesDB(context, result, types...).Model(&QorActivity{}).Count(&count)
 	return count
 }
 

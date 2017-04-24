@@ -11,8 +11,10 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/qor/admin"
+	"github.com/qor/l10n"
 	"github.com/qor/qor"
 	"github.com/qor/qor/test/utils"
+	"github.com/qor/roles"
 	"github.com/theplant/testingutils"
 )
 
@@ -29,20 +31,33 @@ type Order struct {
 	Code string
 }
 
-func init() {
-	db = utils.TestDB()
-	if err := db.DropTableIfExists(&QorActivity{}, &Order{}).Error; err != nil {
-		panic(err)
-	}
-	db.AutoMigrate(&QorActivity{}, &Order{})
-	db.Create(&Order{Code: "1000001"})
-	Admin = admin.New(&qor.Config{DB: db})
-	orderRes := Admin.AddResource(&Order{})
-	Register(orderRes)
-	Admin.MountTo("/admin", mux)
+type Product struct {
+	gorm.Model
+	Code string
+	l10n.Locale
 }
 
-func TestCRUDActivity(t *testing.T) {
+func init() {
+	db = utils.TestDB()
+	if err := db.DropTableIfExists(&QorActivity{}, &Order{}, &Product{}).Error; err != nil {
+		panic(err)
+	}
+	db.AutoMigrate(&QorActivity{}, &Order{}, &Product{})
+	db.Create(&Order{Code: "1000001"})
+	db.Create(&Product{Code: "1000001", Locale: l10n.Locale{LanguageCode: "Global"}})
+	Admin = admin.New(&qor.Config{DB: db})
+	orderRes := Admin.AddResource(&Order{})
+	orderRes.Permission = roles.Allow(roles.CRUD, roles.Anyone)
+	productRes := Admin.AddResource(&Product{})
+	productRes.Permission = roles.Allow(roles.CRUD, roles.Anyone)
+	Register(orderRes)
+	Register(productRes)
+	Admin.MountTo("/admin", mux)
+	l10n.Global = "Global"
+	l10n.RegisterCallbacks(db)
+}
+
+func TestActivityWithNotLocalization(t *testing.T) {
 	http.PostForm(Server.URL+"/admin/orders/1/!qor_activities", url.Values{
 		"QorResource.Action":  {"comment on"},
 		"QorResource.Content": {"Activity Title"},
@@ -70,6 +85,37 @@ func TestCRUDActivity(t *testing.T) {
 		Note:         "Activity Note Changed",
 		ResourceID:   "1",
 		ResourceType: "orders",
+	})
+}
+
+func TestActivityWithLocalization(t *testing.T) {
+	http.PostForm(Server.URL+"/admin/products/1/!qor_activities", url.Values{
+		"QorResource.Action":  {"comment on"},
+		"QorResource.Content": {"Activity Title"},
+		"QorResource.Note":    {"Activity Note"},
+	})
+
+	req, _ := http.Get(Server.URL + "/admin/products/1/!qor_activities.json")
+	assertActivityEqual(t, req.Body, QorActivity{
+		Action:       "comment on",
+		Content:      "Activity Title",
+		Note:         "Activity Note",
+		ResourceID:   "1::Global",
+		ResourceType: "products",
+	})
+
+	http.PostForm(Server.URL+"/admin/products/1/!qor_activities/2/edit", url.Values{
+		"QorResource.ID":   {"2"},
+		"QorResource.Note": {"Activity Note Changed"},
+	})
+
+	req, _ = http.Get(Server.URL + "/admin/products/1/!qor_activities.json")
+	assertActivityEqual(t, req.Body, QorActivity{
+		Action:       "comment on",
+		Content:      "Activity Title",
+		Note:         "Activity Note Changed",
+		ResourceID:   "1::Global",
+		ResourceType: "products",
 	})
 }
 
