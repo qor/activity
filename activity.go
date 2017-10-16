@@ -62,13 +62,16 @@ func Register(res *admin.Resource) {
 		activityResource.Meta(&admin.Meta{Name: "Note", Type: "string", Resource: assetManager})
 		activityResource.EditAttrs("Action", "Content", "Note")
 		activityResource.ShowAttrs("ID", "Action", "Content", "Note", "URL", "UpdatedAt", "CreatorName")
-		activityResource.AddValidator(func(record interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
-			if meta := metaValues.Get("Content"); meta != nil {
-				if name := utils.ToString(meta.Value); strings.TrimSpace(name) == "" {
-					return validations.NewError(record, "Content", "Content can't be blank")
+		activityResource.AddValidator(&resource.Validator{
+			Name: "activity-content-validator",
+			Handler: func(record interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
+				if meta := metaValues.Get("Content"); meta != nil {
+					if name := utils.ToString(meta.Value); strings.TrimSpace(name) == "" {
+						return validations.NewError(record, "Content", "Content can't be blank")
+					}
 				}
-			}
-			return nil
+				return nil
+			},
 		})
 	}
 
