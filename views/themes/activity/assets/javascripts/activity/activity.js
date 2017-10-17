@@ -19,10 +19,22 @@
         EVENT_CLICK = 'click.' + NAMESPACE,
         EVENT_SUBMIT = 'submit.' + NAMESPACE,
         CLASS_EDIT_NOTE = '.qor-activity__edit-button',
-        CLASS_TAB_ACTIVITY = '.qor-tab__activity',
+        CLASS_CONTENT = '.qor-activities__content',
+        CLASS_TAB_LISTS = '.qor-tab__activity',
+        CLASS_TAB_ACTIVITY = '.qor-activities__header button',
         CLASS_EDIT_NOTE_FORM = '.qor-activity__edit-note_form',
         CLASS_NEW_NOTE_FORM = '.qor-activity__new-note_form',
-        CLASS_LISTS = '.qor-activity__lists';
+        CLASS_LISTS = '.qor-activity__lists',
+        CLASS_ACTIVITY = 'is-active',
+        ID_LISTS = '#activity-lists';
+
+    function moveActivityHtml() {
+        let $target = $('.qor-slideout > .qor-slideout__body'),
+            $ele = $('[data-toggle="qor.activity"]');
+
+        $ele.appendTo($target);
+        $target.find('.qor-page__body,.qor-page__header').appendTo($ele.find('#activity-form'));
+    }
 
     function QorActivity(element, options) {
         this.$element = $(element);
@@ -39,20 +51,21 @@
         },
 
         bind: function() {
-            this.$element.on(EVENT_CLICK, $.proxy(this.click, this)).on(EVENT_SUBMIT, 'form', $.proxy(this.submit, this));
-            $(document).on(EVENT_CLICK, CLASS_TAB_ACTIVITY, $.proxy(this.tabClick, this));
+            this.$element
+                .on(EVENT_CLICK, CLASS_EDIT_NOTE, this.click.bind(this))
+                .on(EVENT_SUBMIT, '#activity-lists form', this.submit.bind(this))
+                .on(EVENT_CLICK, CLASS_TAB_ACTIVITY, this.tabClick.bind(this));
         },
 
         unbind: function() {
-            this.$element.off(EVENT_CLICK).off(EVENT_SUBMIT, 'form');
-            $(document).off(EVENT_CLICK, CLASS_TAB_ACTIVITY);
+            this.$element.off(EVENT_CLICK).off(EVENT_SUBMIT);
         },
 
         submit: function(e) {
-            var $form = $(e.target);
-            var FormDatas;
-            var self = this;
-            var NoteTitle = $('#scroll-tab-activity').data().noteTitle;
+            let $form = $(e.target),
+                FormDatas,
+                _this = this,
+                NoteTitle = $(ID_LISTS).data().noteTitle;
 
             e.preventDefault();
 
@@ -71,13 +84,13 @@
                 data.NoteTitle = NoteTitle;
 
                 if ($form.is(CLASS_EDIT_NOTE_FORM)) {
-                    self.hideEditForm($form);
+                    _this.hideEditForm($form);
                     $form.find('.qor-activity__list-note').html(data.Note);
                 }
 
                 if ($form.is(CLASS_NEW_NOTE_FORM)) {
-                    $(CLASS_LISTS).prepend(self.renderActivityList(data));
-                    self.clearForm();
+                    $(CLASS_LISTS).prepend(_this.renderActivityList(data));
+                    _this.clearForm();
                 }
             });
             return false;
@@ -89,31 +102,35 @@
 
         clearForm: function() {
             $('textarea[data-toggle="qor.redactor"]').redactor('code.set', '');
-            $(CLASS_NEW_NOTE_FORM).find('[name="QorResource.Content"],[name="QorResource.Note"]').val('');
+            $(CLASS_NEW_NOTE_FORM)
+                .find('[name="QorResource.Content"],[name="QorResource.Note"]')
+                .val('');
         },
 
         click: function(e) {
-            var $target = $(e.target);
+            let $target = $(e.target),
+                parents = $target.closest('.qor-activity__list');
+            this.showEditForm(parents);
             e.stopPropagation();
-
-            if ($target.is(CLASS_EDIT_NOTE)) {
-                var parents = $target.closest('.qor-activity__list');
-                this.showEditForm(parents);
-            }
         },
 
-        tabClick: function() {
-            var self = this;
-            var activityList = $(CLASS_LISTS).find('.qor-activity__list').length;
-            var NoteTitle = $('#scroll-tab-activity').data().noteTitle;
+        tabClick: function(e) {
+            let _this = this,
+                $element = this.$element,
+                $target = $(e.target),
+                id = $target.data('id'),
+                url = $target.data('resource-url');
 
-            if (activityList) {
+            if ($target.is(CLASS_TAB_LISTS) && $target.hasClass(CLASS_ACTIVITY)) {
                 return;
             }
 
-            var url = $(CLASS_TAB_ACTIVITY).data('resource-url');
+            $element.find(CLASS_CONTENT).hide();
+            $element.find(id).show();
+            $element.find(CLASS_TAB_ACTIVITY).removeClass(CLASS_ACTIVITY);
+            $target.addClass(CLASS_ACTIVITY);
 
-            if (!activityList) {
+            if (url) {
                 $.ajax({
                     url: url,
                     method: 'GET',
@@ -125,38 +142,52 @@
                         if (data.length) {
                             $(CLASS_LISTS).html('');
                             for (var i = data.length - 1; i >= 0; i--) {
-                                data[i].NoteTitle = NoteTitle;
-                                $(CLASS_LISTS).append(self.renderActivityList(data[i]));
+                                data[i].NoteTitle = $(ID_LISTS).data().noteTitle;
+                                $(CLASS_LISTS).append(_this.renderActivityList(data[i]));
                             }
                         }
-                        $(CLASS_LISTS).find('.mdl-spinner').remove();
+                        $(CLASS_LISTS)
+                            .find('.mdl-spinner')
+                            .remove();
                     }
                 });
             } else {
-                $(CLASS_LISTS).find('.mdl-spinner').remove();
+                $(CLASS_LISTS)
+                    .find('.mdl-spinner')
+                    .remove();
             }
         },
 
         showEditForm: function(ele) {
-            ele.find('.qor-activity__list-note,.qor-activity__edit-button').removeClass('show').addClass('hide');
-            ele.find('.qor-activity__edit-feilds,.qor-activity__edit-save-button').removeClass('hide').addClass('show');
+            ele
+                .find('.qor-activity__list-note,.qor-activity__edit-button')
+                .removeClass('show')
+                .addClass('hide');
+            ele
+                .find('.qor-activity__edit-feilds,.qor-activity__edit-save-button')
+                .removeClass('hide')
+                .addClass('show');
         },
 
         hideEditForm: function(ele) {
-            ele.find('.qor-activity__list-note,.qor-activity__edit-button').removeClass('hide').addClass('show');
-            ele.find('.qor-activity__edit-feilds,.qor-activity__edit-save-button').removeClass('show').addClass('hide');
+            ele
+                .find('.qor-activity__list-note,.qor-activity__edit-button')
+                .removeClass('hide')
+                .addClass('show');
+            ele
+                .find('.qor-activity__edit-feilds,.qor-activity__edit-save-button')
+                .removeClass('show')
+                .addClass('hide');
         },
 
         initTabs: function() {
-            if (!$('.qor-slideout.is-shown').get(0)) {
-                $('.qor-page__body').append(QorActivity.CONTENT_HTML);
-                $('.qor-form-container').appendTo($('#scroll-tab-form'));
-                $('#scroll-tab-activity').appendTo('.mdl-layout__content');
-                $('.qor-page__header .qor-tab-bar--activity-header').prependTo('.mdl-layout.qor-sliderout__activity-container');
-                $('.qor-page > .qor-page__header').hide();
-                $('.qor-page > .qor-page__header .qor-action-forms').prependTo('#scroll-tab-form');
-                $('.qor-layout .mdl-layout__content.has-header').removeClass('has-header');
-                $('#scroll-tab-activity').wrapInner('<div class="qor-form-container"></div>');
+            let $parent = this.$element.closest('.mdl-layout__content.qor-page');
+
+            if ($parent.length) {
+                let $ele = $('[data-toggle="qor.activity"]');
+
+                $ele.appendTo($parent);
+                $parent.find('.qor-page__body,.qor-page__header').appendTo($ele.find('#activity-form'));
             }
         },
 
@@ -165,12 +196,6 @@
             this.$element.removeData(NAMESPACE);
         }
     };
-
-    QorActivity.CONTENT_HTML = `<div class="mdl-layout mdl-js-layout qor-sliderout__activity-container">
-            <main class="mdl-layout__content qor-slideout--activity-content">
-                <div class="mdl-layout__tab-panel is-active" id="scroll-tab-form"></div>
-            </main>
-        </div>`;
 
     QorActivity.DEFAULTS = {};
 
@@ -220,13 +245,7 @@
     };
 
     // init activity html after sliderout loaded.
-    $.fn.qorSliderAfterShow.qorActivityinit = function() {
-        var $target = $('.qor-slideout > .qor-slideout__body');
-        var $tab = $('.qor-slideout .qor-tab-bar--activity-header');
-        $target.wrapInner(QorActivity.CONTENT_HTML);
-        $('.qor-sliderout__activity-container').prepend($tab);
-        $('.qor-slideout--activity-content').append($('.qor-slideout #scroll-tab-activity'));
-    };
+    $.fn.qorSliderAfterShow.qorActivityinit = moveActivityHtml;
 
     $(function() {
         var selector = '[data-toggle="qor.activity"]';

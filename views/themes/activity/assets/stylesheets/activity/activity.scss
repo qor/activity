@@ -2,7 +2,7 @@
     .qor-activity__list-title,
     .qor-activity__list-date {
         font-size: 12px;
-        color: rgba(0, 0, 0, .54);
+        color: rgba(0, 0, 0, 0.54);
     }
     .qor-activity__list-title {
         float: left;
@@ -10,42 +10,30 @@
     .qor-activity__list-date {
         float: right;
     }
-    .mdl-layout__tab-bar {
-        height: 48px;
-        background-color: #0277bd;
-    }
-    .qor-slideout__body .mdl-layout__container {
-        position: static;
-    }
-    .qor-sliderout__activity-container {
-        margin: -16px -24px;
-        width: auto;
-        .mdl-layout__tab-bar-button {
-            display: none;
-        }
-        .mdl-layout__tab-bar {
-            width: 100%;
-        }
-    }
-    .qor-slideout--activity-content {
-        width: 100%;
-        .mdl-layout__tab-panel {
-            padding: 16px 24px;
-        }
-    }
-    .qor-tab-bar--activity-header {
+
+    .qor-activities__header {
         min-height: 48px;
         height: 48px;
-        background-color: #0277bd;
-        .mdl-layout__tab-bar {
-            background-color: #0277bd;
-        }
-        .mdl-layout__tab-bar-container {
+        background-color: #03a9f4;
+        margin: 0 -24px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 3px 5px 0 rgba(0, 0, 0, 0.12);
+        > button {
+            width: 49%;
+            background: none;
+            outline: none;
+            font-weight: 500;
+            min-height: 48px;
             height: 48px;
-        }
-        .mdl-layout__tab {
-            height: 48px;
-            line-height: 48px;
+            color: rgba(255, 255, 255, 0.6);
+            border: 0;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            &.is-active {
+                color: #fff;
+                border-bottom: 2px solid #fff;
+            }
         }
         .qor-activities__count {
             position: relative;
@@ -71,7 +59,7 @@
         position: relative;
         .qor-activity__list-date {
             font-size: 12px;
-            color: rgba(0, 0, 0, .54);
+            color: rgba(0, 0, 0, 0.54);
         }
         img {
             max-width: 100%;
@@ -96,7 +84,7 @@
             display: none;
             input {
                 font-size: 14px;
-                font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+                font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
             }
         }
         .qor-activity__list-note {
@@ -135,29 +123,32 @@
     .qor-page__header {
         & + .qor-page__edit,
         & + .qor-page__show {
-            padding-top: 0;
+            padding-top: 0 !important;
             .mdl-layout__container {
                 margin-top: -8px;
             }
         }
     }
 
-    .qor-page__edit,
-    .qor-page__show {
-        .qor-sliderout__activity-container {
-            margin: 0;
+    .mdl-layout__content.qor-page {
+        #activity-lists {
+            padding: 0 24px;
         }
-        .qor-tab-bar--activity-header .mdl-layout__tab-bar {
-            background-color: #0277bd;
+        .qor-activities__container {
+            margin-top: -8px;
+            .qor-activities__header {
+                margin: 0;
+                background-color: #0277bd;
+            }
         }
-        .qor-form-container {
-            margin: 8px 0;
-        }
-    }
-
-    .qor-slideout__body {
-        .qor-tab-bar--activity-header .mdl-layout__tab-bar {
-            background-color: #03a9f4;
+        .qor-activities__content {
+            .qor-page__header {
+                box-shadow: none;
+                position: static;
+                background-color: transparent;
+                width: auto;
+                margin-top: 24px;
+            }
         }
     }
 }
