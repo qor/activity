@@ -36,7 +36,7 @@ func Register(res *admin.Resource) {
 
 	if activityResource == nil {
 		// Auto run migration before add resource
-		res.GetAdmin().Config.DB.AutoMigrate(&QorActivity{})
+		res.GetAdmin().DB.AutoMigrate(&QorActivity{})
 
 		activityResource = qorAdmin.AddResource(&QorActivity{}, &admin.Config{Invisible: true})
 		activityResource.Meta(&admin.Meta{Name: "Action", Type: "hidden", Valuer: func(value interface{}, ctx *qor.Context) interface{} {
