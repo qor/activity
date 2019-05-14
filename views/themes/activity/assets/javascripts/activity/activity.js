@@ -217,8 +217,8 @@
   QorActivity.DEFAULTS = {};
 
   QorActivity.ACTIVITY_LIST_TEMPLATE = `<div class="qor-activity__list">
-            <form class="qor-activity__edit-note_form" action=[[ URL ]] method="POST">
-                <input type="hidden" name="QorResource.ID" value=[[ ID ]]>
+            <form class="qor-activity__edit-note_form" action="[[ URL ]]" method="POST">
+                <input type="hidden" name="QorResource.ID" value="[[ ID ]]">
                 <div class="qor-activity__list-title">
                     <strong>[[ CreatorName ]]</strong> <span>[[ Action ]]</span>
                 </div>
@@ -227,7 +227,7 @@
                 </div>
                 <div class="qor-activity__list-content">[[ &Content ]]</div>
                 <div>
-                    <strong>[[ NoteTitle ]]</strong>
+                    <strong class="qor-activity__list-note-title">[[ NoteTitle ]]</strong>
                     <span class="qor-activity__list-note">[[ Note ]]</span>
                     <a class="mdl-button mdl-js-button mdl-button--icon qor-activity__edit-button" href="#">
                         <i class="material-icons md-18 qor-activity__edit-button">edit</i>
