@@ -33,14 +33,14 @@
       $ele = $('[data-toggle="qor.activity"]'),
       $publish2 = $(".qor-form-container.qor-pulish2__action"),
       $activityForm = $ele.find("#activity-form"),
-      afterQorActivityinit = $.fn.qorSliderAfterShow.afterQorActivityinit;
+      afterQorActivityinit = $.fn.afterQorActivityinit;
 
     $ele.appendTo($target);
 
     $target.find(".qor-page__body,.qor-page__header").appendTo($activityForm);
     if ($publish2.length) {
       $publish2.prependTo($activityForm);
-      if (afterQorActivityinit) {
+      if (afterQorActivityinit && $.isFunction(afterQorActivityinit)) {
         afterQorActivityinit();
       }
     }
@@ -198,7 +198,7 @@
 
     initTabs: function() {
       let $parent = this.$element.closest(".mdl-layout__content.qor-page"),
-        afterQorActivityinit = $.fn.qorSliderAfterShow.afterQorActivityinit;
+        afterQorActivityinit = $.fn.afterQorActivityinit;
 
       if ($parent.length) {
         let $ele = $('[data-toggle="qor.activity"]');
@@ -210,7 +210,7 @@
         $(".qor-form-container.qor-pulish2__action").prependTo(
           $ele.find("#activity-form")
         );
-        if (afterQorActivityinit) {
+        if (afterQorActivityinit && $.isFunction(afterQorActivityinit)) {
           afterQorActivityinit();
         }
       }
