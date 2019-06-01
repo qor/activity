@@ -28,6 +28,7 @@
     CLASS_ACTIVITY = "is-active",
     ID_LISTS = "#activity-lists";
 
+
   function moveActivityHtml() {
     let $target = $(".qor-slideout > .qor-slideout__body"),
       $ele = $('[data-toggle="qor.activity"]'),
