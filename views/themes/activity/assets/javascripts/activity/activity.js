@@ -122,6 +122,8 @@
       $(CLASS_NEW_NOTE_FORM)
         .find('[name="QorResource.Content"],[name="QorResource.Note"]')
         .val("");
+
+      $(CLASS_NEW_NOTE_FORM).find(":submit").attr("disabled", true);
     },
 
     click: function(e) {
