@@ -118,7 +118,10 @@
     },
 
     clearForm: function() {
-      $('textarea[data-toggle="qor.redactor"]').redactor("code.set", "");
+      if($('textarea[data-toggle="qor.redactor"]').length){
+        $('textarea[data-toggle="qor.redactor"]').redactor("code.set", "");
+      }
+      
       $(CLASS_NEW_NOTE_FORM)
         .find('[name="QorResource.Content"],[name="QorResource.Note"]')
         .val("");
