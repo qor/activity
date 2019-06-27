@@ -118,8 +118,9 @@
     },
 
     clearForm: function() {
-      if($('textarea[data-toggle="qor.redactor"]').length){
-        $('textarea[data-toggle="qor.redactor"]').redactor("code.set", "");
+      var $textarea = $(CLASS_NEW_NOTE_FORM).find('textarea[data-toggle="qor.redactor"]');
+      if($textarea.length){
+        $textarea.redactor("code.set", "");
       }
       
       $(CLASS_NEW_NOTE_FORM)
