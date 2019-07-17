@@ -36,9 +36,12 @@
       $activityForm = $ele.find("#activity-form"),
       afterQorActivityinit = $.fn.afterQorActivityinit;
 
-    $ele.appendTo($target);
+    if($target.length){
+      $ele.appendTo($target);
+      $target.find(".qor-page__body,.qor-page__header").appendTo($activityForm);
+    }
 
-    $target.find(".qor-page__body,.qor-page__header").appendTo($activityForm);
+
     if ($publish2.length) {
       $publish2.prependTo($activityForm);
       if (afterQorActivityinit && $.isFunction(afterQorActivityinit)) {
