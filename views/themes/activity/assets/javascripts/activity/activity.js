@@ -89,6 +89,8 @@
       e.preventDefault();
 
       FormDatas = $form.serialize();
+      $(CLASS_NEW_NOTE_FORM).find(":submit").attr("disabled", true);
+
       $.ajax($form.prop("action"), {
         method: $form.prop("method"),
         data: FormDatas,
@@ -97,20 +99,26 @@
           Accept: "application/json; charset=utf-8"
         }
       }).done(function(data) {
+
+        $(CLASS_NEW_NOTE_FORM).find(":submit").attr("disabled", false);
+
         if (data.errors) {
+          window.QOR.qorConfirm(data.errors[0])
           return;
         }
+
         data.NoteTitle = NoteTitle;
 
         if ($form.is(CLASS_EDIT_NOTE_FORM)) {
           _this.hideEditForm($form);
-          $form.find(".qor-activity__list-note").html(data.Note);
+          $form.find(".qor-activity__list-note").html(data.Note.escapeSymbol());
         }
 
         if ($form.is(CLASS_NEW_NOTE_FORM)) {
           $(CLASS_LISTS).prepend(_this.renderActivityList(data));
           _this.clearForm();
         }
+        
       });
 
       return false;
@@ -123,14 +131,12 @@
     clearForm: function() {
       var $textarea = $(CLASS_NEW_NOTE_FORM).find('textarea[data-toggle="qor.redactor"]');
       if($textarea.length){
-        $textarea.redactor("code.set", "");
+        $textarea.redactor("source.setCode", "");
       }
       
       $(CLASS_NEW_NOTE_FORM)
         .find('[name="QorResource.Content"],[name="QorResource.Note"]')
         .val("");
-
-      $(CLASS_NEW_NOTE_FORM).find(":submit").attr("disabled", true);
     },
 
     click: function(e) {
