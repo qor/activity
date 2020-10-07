@@ -5,6 +5,7 @@ Activity is dependant on [QOR Admin](https://github.com/qor/admin). It provides 
 Applying Activity to a Resource will add `Comment` and `Track` data/state changes within the [QOR Admin](https://github.com/qor/admin) interface.
 
 [![GoDoc](https://godoc.org/github.com/qor/activity?status.svg)](https://godoc.org/github.com/qor/activity)
+[![Build Status](https://travis-ci.com/qor/activity.svg?branch=master)](https://travis-ci.com/qor/activity)
 
 ## Usage
 
