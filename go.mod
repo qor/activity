@@ -19,7 +19,6 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535 // indirect
 	github.com/aws/aws-sdk-go v1.55.8 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
-	github.com/chris-ramon/douceur v0.2.0 // indirect
 	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
@@ -31,7 +30,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.1 // indirect
 	github.com/lib/pq v1.8.0 // indirect
-	github.com/microcosm-cc/bluemonday v1.0.3 // indirect
+	github.com/microcosm-cc/bluemonday v1.0.26 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/qor/assetfs v0.0.0-20170713023933-ff57fdc13a14 // indirect
 	github.com/qor/middlewares v0.0.0-20170822143614-781378b69454 // indirect
@@ -40,7 +39,7 @@ require (
 	github.com/qor/session v0.0.0-20170907035918-8206b0adab70 // indirect
 	github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be // indirect
 	github.com/theplant/cldr v0.0.0-20190423050709-9f76f7ce4ee8 // indirect
-	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
-	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect
+	golang.org/x/image v0.18.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
